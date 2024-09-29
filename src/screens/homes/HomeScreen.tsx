@@ -25,6 +25,7 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyles} from '../../styles/globalStyles';
 import auth from '@react-native-firebase/auth';
 import {Dimensions} from 'react-native';
+import SwitchComponent from '../../components/SwitchComponent';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -35,6 +36,28 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <View style={{flex: 1}}>
+      <SectionComponent
+        styles={{
+          paddingVertical: 23,
+          backgroundColor: colors.bgColor,
+          marginTop: 0,
+          marginBottom: -30,
+        }}>
+        <RowComponent>
+          <View
+            style={{
+              flex: 1,
+            }}>
+            <TextComponent
+              styles={{fontWeight: 'bold', fontSize: 20}}
+              text="HomeScreen"
+            />
+          </View>
+          <TouchableOpacity onPress={handleSingout}>
+            <Logout size={30} color="coral" />
+          </TouchableOpacity>
+        </RowComponent>
+      </SectionComponent>
       <Container isScroll>
         {/* <SectionComponent>
           <RowComponent justify="space-between">
@@ -42,26 +65,22 @@ const HomeScreen = ({navigation}: any) => {
             <Notification size={24} color={colors.desc} /> 
           </RowComponent>
         </SectionComponent> */}
-        <SectionComponent>
+        {/* <SectionComponent>
           <RowComponent>
-            {/* <View
-              style={{
-                flex: 1,
-              }}>
-              <TextComponent text="Hi, Jason" />
-              <TitleComponent text="Be Productive today" />
-            </View> */}
             <View
               style={{
                 flex: 1,
               }}>
-              <TextComponent text="HomeScreen" />
+              <TextComponent
+                styles={{fontWeight: 'bold', fontSize: 18}}
+                text="HomeScreen"
+              />
             </View>
             <TouchableOpacity onPress={handleSingout}>
               <Logout size={22} color="coral" />
             </TouchableOpacity>
           </RowComponent>
-        </SectionComponent>
+        </SectionComponent> */}
 
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
@@ -70,7 +89,7 @@ const HomeScreen = ({navigation}: any) => {
               {
                 flex: 1,
                 width: screenWidth - 40,
-                // height: 140,
+                backgroundColor: '#5F7990',
                 justifyContent: 'center',
                 alignItems: 'center',
               },
@@ -80,15 +99,11 @@ const HomeScreen = ({navigation}: any) => {
                 {
                   color: '#26F2CD',
                   fontWeight: 'bold',
-                  // backgroundColor: 'gray',
-                  // paddingHorizontal: 100,
-                  // paddingVertical: 40,
-                  // marginBottom: 10,
                 },
               ]}
               text="HLK Radar Sensor"
             />
-            {/* <TextComponent text="Trạng thái cảm biến" /> */}
+            <TextComponent text="Trạng thái cảm biến" />
 
             <View
               style={{
@@ -98,21 +113,6 @@ const HomeScreen = ({navigation}: any) => {
                 backgroundColor: '#5DF15A',
                 marginTop: 4,
               }}></View>
-
-            {/* <TouchableOpacity>
-              <TextComponent
-                styles={[
-                  globalStyles.inputContainer,
-                  {
-                    color: 'green',
-                    fontWeight: 'bold',
-                    paddingHorizontal: 40,
-                    paddingVertical: 40,
-                  },
-                ]}
-                text="HLK Radar Sensor"
-              />
-            </TouchableOpacity> */}
           </View>
         </SectionComponent>
 
@@ -123,21 +123,17 @@ const HomeScreen = ({navigation}: any) => {
               {
                 flex: 1,
                 width: screenWidth - 40,
-                // height: 140,
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginRight: 10,
+                backgroundColor: '#5F7990',
               },
             ]}>
             <TextComponent text="Computer 1" />
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
-                backgroundColor: '#EC342A',
-                marginTop: 4,
-              }}></View>
+            <SwitchComponent
+              showConfirmationDialog={true}
+              styles={{paddingVertical: 8}}
+            />
           </View>
           <View
             style={[
@@ -145,65 +141,16 @@ const HomeScreen = ({navigation}: any) => {
               {
                 flex: 1,
                 width: screenWidth - 40,
-                // height: 140,
+                backgroundColor: '#5F7990',
                 justifyContent: 'center',
                 alignItems: 'center',
               },
             ]}>
             <TextComponent text="Computer 2" />
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
-                backgroundColor: '#5DF15A',
-                marginTop: 4,
-              }}></View>
-          </View>
-        </SectionComponent>
-        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
-          <View
-            style={[
-              globalStyles.inputContainer,
-              {
-                flex: 1,
-                width: screenWidth - 40,
-                // height: 140,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 10,
-              },
-            ]}>
-            <TextComponent text="Computer 3" />
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
-                backgroundColor: '#5DF15A',
-                marginTop: 4,
-              }}></View>
-          </View>
-          <View
-            style={[
-              globalStyles.inputContainer,
-              {
-                flex: 1,
-                width: screenWidth - 40,
-                // height: 140,
-                justifyContent: 'center',
-                alignItems: 'center',
-              },
-            ]}>
-            <TextComponent text="Computer 4" />
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
-                backgroundColor: '#5DF15A',
-                marginTop: 4,
-              }}></View>
+            <SwitchComponent
+              showConfirmationDialog={true}
+              styles={{paddingVertical: 8}}
+            />
           </View>
         </SectionComponent>
 
@@ -214,7 +161,45 @@ const HomeScreen = ({navigation}: any) => {
               {
                 flex: 1,
                 width: screenWidth - 40,
-                // height: 140,
+                backgroundColor: '#5F7990',
+                justifyContent: 'center',
+                alignItems: 'center',
+
+                marginRight: 10,
+              },
+            ]}>
+            <TextComponent text="Computer 3" />
+            <SwitchComponent
+              showConfirmationDialog={true}
+              styles={{paddingVertical: 8}}
+            />
+          </View>
+          <View
+            style={[
+              globalStyles.inputContainer,
+              {
+                flex: 1,
+                width: screenWidth - 40,
+                backgroundColor: '#5F7990',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            ]}>
+            <TextComponent text="Computer 4" />
+            <SwitchComponent
+              showConfirmationDialog={true}
+              styles={{paddingVertical: 8}}
+            />
+          </View>
+        </SectionComponent>
+
+        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
+          <View
+            style={[
+              globalStyles.inputContainer,
+              {
+                flex: 1,
+                width: screenWidth - 40,
                 justifyContent: 'center',
                 alignItems: 'flex-start',
                 marginLeft: 2,
@@ -236,6 +221,28 @@ const HomeScreen = ({navigation}: any) => {
               styles={{marginLeft: 2}}
               text="Lượng điện tiêu thụ hàng tháng: 210 kWh"
             />
+          </View>
+        </SectionComponent>
+
+        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
+          <View
+            style={[
+              globalStyles.inputContainer,
+              {
+                flex: 1,
+                width: screenWidth - 40,
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                marginLeft: 2,
+              },
+            ]}>
+            {/* <SwitchComponent
+              styles={{
+                // transform: [{scaleX: 2}, {scaleY: 2}],
+                paddingVertical: 20,
+              }}
+            />
+            <SwitchComponent showConfirmationDialog={true} /> */}
           </View>
         </SectionComponent>
 
@@ -267,6 +274,7 @@ const HomeScreen = ({navigation}: any) => {
             </RowComponent>
           </CardComponent>
         </SectionComponent>
+
         {/* <SectionComponent>
           <RowComponent styles={{alignItems: 'flex-start'}}>
             <View style={{flex: 1}}>
@@ -320,6 +328,7 @@ const HomeScreen = ({navigation}: any) => {
             </View>
           </RowComponent>
         </SectionComponent> */}
+
         {/* <SectionComponent>
           <TextComponent
             flex={1}
@@ -348,7 +357,7 @@ const HomeScreen = ({navigation}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={1}
           onPress={() => navigation.navigate('AddNewTask')}
           style={[
@@ -363,7 +372,7 @@ const HomeScreen = ({navigation}: any) => {
           ]}>
           <TextComponent text="Add new tasks" flex={0} />
           <Add size={22} color={colors.white} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

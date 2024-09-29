@@ -71,7 +71,6 @@ const InputComponent = (props: Props) => {
                 margin: 0,
                 padding: 0,
                 paddingVertical: 2,
-
                 flex: 1,
               },
             ]}
