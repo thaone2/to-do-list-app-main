@@ -61,7 +61,7 @@ const RegisterScreen = ({navigation}: any) => {
           justifyContent: 'center',
         }}>
         <RowComponent styles={{marginBottom: 16}}>
-          <TitleComponent text="SIGN IN" size={32} flex={0} />
+          <TitleComponent color="white" text="SIGN IN" size={32} flex={0} />
         </RowComponent>
         <InputComponent
           title="Email"

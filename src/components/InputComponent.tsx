@@ -72,10 +72,11 @@ const InputComponent = (props: Props) => {
                 padding: 0,
                 paddingVertical: 2,
                 flex: 1,
+                color: 'black',
               },
             ]}
             placeholder={placeholder ?? ''}
-            placeholderTextColor={'#676767'}
+            placeholderTextColor={'black'}
             value={value}
             onChangeText={val => onChange(val)}
             multiline={multible}
@@ -89,16 +90,16 @@ const InputComponent = (props: Props) => {
 
         {allowClear && value && (
           <TouchableOpacity onPress={() => onChange('')}>
-            <AntDesign name="close" size={20} color={colors.white} />
+            <AntDesign name="close" size={20} color="black" />
           </TouchableOpacity>
         )}
 
         {isPassword && (
           <TouchableOpacity onPress={() => setShowPass(!showPass)}>
             {showPass ? (
-              <EyeSlash size={20} color={colors.desc} />
+              <EyeSlash size={20} color="black" />
             ) : (
-              <Eye size={20} color={colors.desc} />
+              <Eye size={20} color="black" />
             )}
           </TouchableOpacity>
         )}

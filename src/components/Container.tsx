@@ -28,7 +28,7 @@ const Container = (props: Props) => {
       <RowComponent
         styles={{
           paddingHorizontal: 16,
-          paddingBottom: 16,
+          // paddingBottom: 16,
           justifyContent: 'center',
           alignItems: 'center',
         }}>

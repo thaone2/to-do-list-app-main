@@ -1,6 +1,9 @@
 export const colors = {
-  bgColor: '#171719',
+  // bgColor: '#B0E9CA',
+  bgColor: '#CED1FB',
+  // bgColor: '#171719',
   gray: '#222329',
+  // gray: '#FFEADD',
   gray2: '#696B6F',
   text: '#ffffff',
   desc: '#e6e6e6',

@@ -5,8 +5,11 @@ import {
   Logout,
   Notification,
   SearchNormal1,
+  Calendar,
+  Clock,
 } from 'iconsax-react-native';
-import React from 'react';
+
+import React, {useEffect, useRef, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import AvatarGroup from '../../components/AvatarGroup';
 import CardComponent from '../../components/CardComponent';
@@ -26,6 +29,9 @@ import {globalStyles} from '../../styles/globalStyles';
 import auth from '@react-native-firebase/auth';
 import {Dimensions} from 'react-native';
 import SwitchComponent from '../../components/SwitchComponent';
+import moment from 'moment';
+import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
+import database from '@react-native-firebase/database';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -33,6 +39,78 @@ const HomeScreen = ({navigation}: any) => {
   };
 
   const screenWidth = Dimensions.get('window').width;
+  const timeRef = useRef(moment().format('HH:mm:ss'));
+  const dateRef = useRef(moment().format('dddd, DD/MM/YYYY')); // Hiển thị thứ
+
+  const [time, setTime] = useState(timeRef.current);
+  const [date, setDate] = useState(dateRef.current);
+
+  const [computerStatuses, setComputerStatuses] = useState({
+    computer1: 0,
+    computer2: 0,
+    computer3: 0,
+    computer4: 0,
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Cập nhật thời gian và ngày tháng mỗi giây
+      const currentTime = moment().format('HH:mm:ss');
+      const currentDate = moment().format('dddd, DD/MM/YYYY');
+
+      timeRef.current = currentTime;
+      dateRef.current = currentDate;
+
+      setTime(currentTime);
+      setDate(currentDate);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    const databaseRef = database().ref('Computer');
+
+    // Attach the listener
+    const listener = databaseRef.on('value', snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        setComputerStatuses({
+          computer1: data.computer1?.status || 0,
+          computer2: data.computer2?.status || 0,
+          computer3: data.computer3?.status || 0,
+          computer4: data.computer4?.status || 0,
+        });
+      }
+    });
+
+    // Clean up the listener
+    return () => {
+      databaseRef.off('value', listener);
+    };
+  }, []);
+
+  const handleSwitchChange = (computerId, newValue) => {
+    // Update the local state
+    setComputerStatuses(prevStatuses => ({
+      ...prevStatuses,
+      [computerId]: newValue ? 1 : 0,
+    }));
+
+    console.log(computerStatuses);
+    // Update the status in Firebase
+    database()
+      .ref(`Computer/${computerId}`)
+      .set({status: newValue ? 1 : 0})
+      .then(() => {
+        console.log(`Status of ${computerId} updated successfully.`);
+      })
+      .catch(error => {
+        console.error(`Failed to update ${computerId} status:`, error);
+      });
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -41,7 +119,9 @@ const HomeScreen = ({navigation}: any) => {
           paddingVertical: 23,
           backgroundColor: colors.bgColor,
           marginTop: 0,
-          marginBottom: -30,
+          marginBottom: -10,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
         <RowComponent>
           <View
@@ -49,7 +129,7 @@ const HomeScreen = ({navigation}: any) => {
               flex: 1,
             }}>
             <TextComponent
-              styles={{fontWeight: 'bold', fontSize: 20}}
+              styles={{color: 'black', fontWeight: 'bold', fontSize: 20}}
               text="HomeScreen"
             />
           </View>
@@ -59,28 +139,44 @@ const HomeScreen = ({navigation}: any) => {
         </RowComponent>
       </SectionComponent>
       <Container isScroll>
-        {/* <SectionComponent>
-          <RowComponent justify="space-between">
-            <Element4 size={24} color={colors.desc} />
-            <Notification size={24} color={colors.desc} /> 
-          </RowComponent>
-        </SectionComponent> */}
-        {/* <SectionComponent>
-          <RowComponent>
-            <View
-              style={{
-                flex: 1,
-              }}>
-              <TextComponent
-                styles={{fontWeight: 'bold', fontSize: 18}}
-                text="HomeScreen"
-              />
-            </View>
-            <TouchableOpacity onPress={handleSingout}>
-              <Logout size={22} color="coral" />
-            </TouchableOpacity>
-          </RowComponent>
-        </SectionComponent> */}
+        <SectionComponent>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <CardImageConponent color="rgba(67, 159, 238, 0.9)">
+              <Calendar size="32" color="#FF8A65" />
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
+                }}>
+                <TextComponent
+                  color="white"
+                  font="semiBold"
+                  size={20}
+                  text={date}
+                  styles={{textTransform: 'capitalize'}}
+                />
+              </View>
+            </CardImageConponent>
+
+            <CardImageConponent color="rgba(3, 255, 125, 0.6)">
+              <Clock size="32" color="#FF8A65" />
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
+                }}>
+                <TextComponent
+                  color="white"
+                  font="semiBold"
+                  size={20}
+                  text={time}
+                />
+              </View>
+            </CardImageConponent>
+          </View>
+        </SectionComponent>
 
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
@@ -133,6 +229,8 @@ const HomeScreen = ({navigation}: any) => {
             <SwitchComponent
               showConfirmationDialog={true}
               styles={{paddingVertical: 8}}
+              value={computerStatuses.computer1 === 1}
+              onValueChange={value => handleSwitchChange('computer1', value)}
             />
           </View>
           <View
@@ -150,6 +248,8 @@ const HomeScreen = ({navigation}: any) => {
             <SwitchComponent
               showConfirmationDialog={true}
               styles={{paddingVertical: 8}}
+              value={computerStatuses.computer2 === 1}
+              onValueChange={value => handleSwitchChange('computer2', value)}
             />
           </View>
         </SectionComponent>
@@ -172,6 +272,8 @@ const HomeScreen = ({navigation}: any) => {
             <SwitchComponent
               showConfirmationDialog={true}
               styles={{paddingVertical: 8}}
+              value={computerStatuses.computer3 === 1}
+              onValueChange={value => handleSwitchChange('computer3', value)}
             />
           </View>
           <View
@@ -189,6 +291,8 @@ const HomeScreen = ({navigation}: any) => {
             <SwitchComponent
               showConfirmationDialog={true}
               styles={{paddingVertical: 8}}
+              value={computerStatuses.computer4 === 1}
+              onValueChange={value => handleSwitchChange('computer4', value)}
             />
           </View>
         </SectionComponent>
@@ -210,15 +314,15 @@ const HomeScreen = ({navigation}: any) => {
               text="Lượng điện tiêu thụ"
             />
             <TextComponent
-              styles={{marginLeft: 2}}
+              styles={{marginLeft: 2, color: 'gray'}}
               text="Lượng điện tiêu thụ hàng ngày: 10 kWh"
             />
             <TextComponent
-              styles={{marginLeft: 2}}
+              styles={{marginLeft: 2, color: 'gray'}}
               text="Lượng điện tiêu thụ hàng tuần: 70 kWh"
             />
             <TextComponent
-              styles={{marginLeft: 2}}
+              styles={{marginLeft: 2, color: 'gray'}}
               text="Lượng điện tiêu thụ hàng tháng: 210 kWh"
             />
           </View>
@@ -235,15 +339,7 @@ const HomeScreen = ({navigation}: any) => {
                 alignItems: 'flex-start',
                 marginLeft: 2,
               },
-            ]}>
-            {/* <SwitchComponent
-              styles={{
-                // transform: [{scaleX: 2}, {scaleY: 2}],
-                paddingVertical: 20,
-              }}
-            />
-            <SwitchComponent showConfirmationDialog={true} /> */}
-          </View>
+            ]}></View>
         </SectionComponent>
 
         <SectionComponent>
@@ -275,7 +371,7 @@ const HomeScreen = ({navigation}: any) => {
           </CardComponent>
         </SectionComponent>
 
-        {/* <SectionComponent>
+        <SectionComponent>
           <RowComponent styles={{alignItems: 'flex-start'}}>
             <View style={{flex: 1}}>
               <CardImageConponent>
@@ -327,7 +423,7 @@ const HomeScreen = ({navigation}: any) => {
               </CardImageConponent>
             </View>
           </RowComponent>
-        </SectionComponent> */}
+        </SectionComponent>
 
         {/* <SectionComponent>
           <TextComponent

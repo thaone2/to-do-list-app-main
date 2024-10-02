@@ -48,7 +48,7 @@ const LoginScreen = ({navigation}: any) => {
           justifyContent: 'center',
         }}>
         <RowComponent styles={{marginBottom: 16}}>
-          <TitleComponent text="LOGIN" size={32} flex={0} />
+          <TitleComponent color="white" text="LOGIN" size={36} flex={0} />
         </RowComponent>
         <InputComponent
           title="Email"
@@ -71,6 +71,7 @@ const LoginScreen = ({navigation}: any) => {
           isLoading={isLoading}
           text="Login"
           onPress={handleLogin}
+          color="#3EE8F1"
         />
 
         <RowComponent styles={{marginTop: 20}}>

@@ -33,7 +33,11 @@ const ButtonComponent = (props: Props) => {
           text={text}
           flex={0}
           size={16}
-          styles={{textTransform: 'uppercase'}}
+          styles={{
+            textTransform: 'uppercase',
+            color: 'white',
+            fontWeight: 'bold',
+          }}
         />
       )}
     </TouchableOpacity>

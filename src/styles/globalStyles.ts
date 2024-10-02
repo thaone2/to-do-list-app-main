@@ -22,7 +22,8 @@ export const globalStyles = StyleSheet.create({
   },
 
   inputContainer: {
-    backgroundColor: colors.gray,
+    // backgroundColor: colors.gray,
+    backgroundColor: colors.white,
     borderRadius: 12,
     paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
     paddingVertical: 12,
