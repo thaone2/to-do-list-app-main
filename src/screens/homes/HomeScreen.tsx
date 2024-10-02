@@ -10,7 +10,13 @@ import {
 } from 'iconsax-react-native';
 
 import React, {useEffect, useRef, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {
+  ImageBackground,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AvatarGroup from '../../components/AvatarGroup';
 import CardComponent from '../../components/CardComponent';
 import CardImageConponent from '../../components/CardImageConponent';
@@ -32,6 +38,7 @@ import SwitchComponent from '../../components/SwitchComponent';
 import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import database from '@react-native-firebase/database';
+import ComputerImageComponent from '../../components/ComputerImageComponent';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -54,7 +61,6 @@ const HomeScreen = ({navigation}: any) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // Cập nhật thời gian và ngày tháng mỗi giây
       const currentTime = moment().format('HH:mm:ss');
       const currentDate = moment().format('dddd, DD/MM/YYYY');
 
@@ -73,7 +79,6 @@ const HomeScreen = ({navigation}: any) => {
   useEffect(() => {
     const databaseRef = database().ref('Computer');
 
-    // Attach the listener
     const listener = databaseRef.on('value', snapshot => {
       const data = snapshot.val();
       if (data) {
@@ -92,14 +97,14 @@ const HomeScreen = ({navigation}: any) => {
     };
   }, []);
 
-  const handleSwitchChange = (computerId, newValue) => {
+  const handleSwitchChange = (computerId: any, newValue: any) => {
     // Update the local state
     setComputerStatuses(prevStatuses => ({
       ...prevStatuses,
       [computerId]: newValue ? 1 : 0,
     }));
 
-    console.log(computerStatuses);
+    // console.log(computerStatuses);
     // Update the status in Firebase
     database()
       .ref(`Computer/${computerId}`)
@@ -177,9 +182,8 @@ const HomeScreen = ({navigation}: any) => {
             </CardImageConponent>
           </View>
         </SectionComponent>
-
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
-          <View
+          {/* <View
             style={[
               globalStyles.inputContainer,
               {
@@ -209,10 +213,211 @@ const HomeScreen = ({navigation}: any) => {
                 backgroundColor: '#5DF15A',
                 marginTop: 4,
               }}></View>
-          </View>
+          </View> */}
+
+          <ImageBackground
+            source={require('../../assets/images/logo-iuh.png')}
+            imageStyle={{borderRadius: 12}}
+            style={[
+              globalStyles.card,
+              {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(113, 77, 217, 0.2)',
+                borderRadius: 14,
+              },
+            ]}>
+            <View
+              style={[
+                {
+                  flex: 1,
+                  borderRadius: 12,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}>
+              <TextComponent
+                styles={[
+                  {
+                    color: 'white',
+                    fontWeight: 'bold',
+                  },
+                ]}
+                text="HLK Radar Sensor"
+                size={18}
+              />
+              <TextComponent
+                color="black"
+                size={14}
+                text="Trạng thái cảm biến"
+              />
+
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50 / 2,
+                  backgroundColor: '#5DF15A',
+                  marginTop: 4,
+                }}></View>
+            </View>
+          </ImageBackground>
         </SectionComponent>
 
-        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
+        {/* computer */}
+        <SectionComponent
+          styles={{
+            flex: 1,
+            flexDirection: 'row',
+            // width: screenWidth - 40,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <ComputerImageComponent
+            styles={{
+              borderRadius: 12,
+              paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+              paddingVertical: 12,
+              backgroundColor: 'rgba(106, 248, 253, 0.3)',
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  padding: 2,
+                  borderRadius: 10,
+                }}
+                color="gray"
+                size={18}
+                text="Computer 1"
+              />
+              <SwitchComponent
+                showConfirmationDialog={true}
+                styles={{paddingVertical: 8}}
+                value={computerStatuses.computer1 === 1}
+                onValueChange={value => handleSwitchChange('computer1', value)}
+              />
+            </View>
+          </ComputerImageComponent>
+          <ComputerImageComponent
+            styles={{
+              borderRadius: 12,
+              paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+              paddingVertical: 12,
+              backgroundColor: 'rgba(106, 248, 253, 0.3)',
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  padding: 2,
+                  borderRadius: 10,
+                }}
+                color="gray"
+                size={18}
+                text="Computer 2"
+              />
+              <SwitchComponent
+                showConfirmationDialog={true}
+                styles={{paddingVertical: 8}}
+                value={computerStatuses.computer2 === 1}
+                onValueChange={value => handleSwitchChange('computer2', value)}
+              />
+            </View>
+          </ComputerImageComponent>
+        </SectionComponent>
+        <SectionComponent
+          styles={{
+            flex: 1,
+            flexDirection: 'row',
+            // width: screenWidth - 40,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <ComputerImageComponent
+            styles={{
+              borderRadius: 12,
+              paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+              paddingVertical: 12,
+              backgroundColor: 'rgba(106, 248, 253, 0.3)',
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  padding: 2,
+                  borderRadius: 10,
+                }}
+                color="gray"
+                size={18}
+                text="Computer 3"
+              />
+              <SwitchComponent
+                showConfirmationDialog={true}
+                styles={{paddingVertical: 8}}
+                value={computerStatuses.computer3 === 1}
+                onValueChange={value => handleSwitchChange('computer3', value)}
+              />
+            </View>
+          </ComputerImageComponent>
+          <ComputerImageComponent
+            styles={{
+              borderRadius: 12,
+              paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+              paddingVertical: 12,
+              backgroundColor: 'rgba(106, 248, 253, 0.3)',
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  padding: 2,
+                  borderRadius: 10,
+                }}
+                color="gray"
+                size={18}
+                text="Computer 4"
+              />
+              <SwitchComponent
+                showConfirmationDialog={true}
+                styles={{paddingVertical: 8}}
+                value={computerStatuses.computer4 === 1}
+                onValueChange={value => handleSwitchChange('computer4', value)}
+              />
+            </View>
+          </ComputerImageComponent>
+        </SectionComponent>
+
+        {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
             style={[
               globalStyles.inputContainer,
@@ -253,7 +458,6 @@ const HomeScreen = ({navigation}: any) => {
             />
           </View>
         </SectionComponent>
-
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
             style={[
@@ -295,8 +499,7 @@ const HomeScreen = ({navigation}: any) => {
               onValueChange={value => handleSwitchChange('computer4', value)}
             />
           </View>
-        </SectionComponent>
-
+        </SectionComponent> */}
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
             style={[
@@ -327,8 +530,7 @@ const HomeScreen = ({navigation}: any) => {
             />
           </View>
         </SectionComponent>
-
-        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
+        {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
             style={[
               globalStyles.inputContainer,
@@ -341,7 +543,6 @@ const HomeScreen = ({navigation}: any) => {
               },
             ]}></View>
         </SectionComponent>
-
         <SectionComponent>
           <RowComponent
             styles={[globalStyles.inputContainer]}
@@ -370,7 +571,6 @@ const HomeScreen = ({navigation}: any) => {
             </RowComponent>
           </CardComponent>
         </SectionComponent>
-
         <SectionComponent>
           <RowComponent styles={{alignItems: 'flex-start'}}>
             <View style={{flex: 1}}>
@@ -423,8 +623,7 @@ const HomeScreen = ({navigation}: any) => {
               </CardImageConponent>
             </View>
           </RowComponent>
-        </SectionComponent>
-
+        </SectionComponent> */}
         {/* <SectionComponent>
           <TextComponent
             flex={1}
