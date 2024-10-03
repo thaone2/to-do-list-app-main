@@ -1,13 +1,13 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
-import TextComponent from '../../components/TextComponent';
 import auth from '@react-native-firebase/auth';
 import {Logout} from 'iconsax-react-native';
-import InputComponent from '../../components/InputComponent';
-import RowComponent from '../../components/RowComponent';
-import {globalStyles} from '../../styles/globalStyles';
-import {colors} from '../../constants/colors';
+import React from 'react';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+
 import Container from '../../components/Container';
+import RowComponent from '../../components/RowComponent';
+import TextComponent from '../../components/TextComponent';
+import {globalStyles} from '../../styles/globalStyles';
+
 const SettingScreen = () => {
   // const handleSingout = async () => {
   //   await auth().signOut();
@@ -29,7 +29,7 @@ const SettingScreen = () => {
               {
                 // paddingVertical: 20,
                 paddingHorizontal: 20,
-                backgroundColor: '#D3E0E2',
+                backgroundColor: 'white',
                 marginHorizontal: 20,
                 marginVertical: 20,
               },
@@ -43,7 +43,7 @@ const SettingScreen = () => {
           styles={[
             globalStyles.inputContainer,
             {
-              backgroundColor: 'orange',
+              backgroundColor: '#DEDEDF',
               marginHorizontal: 20,
               // marginVertical: 20,
             },

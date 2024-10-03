@@ -1,50 +1,18 @@
-import {
-  Add,
-  Edit2,
-  Element4,
-  Logout,
-  Notification,
-  SearchNormal1,
-  Calendar,
-  Clock,
-  Home2,
-  Notification1,
-  ChartSquare,
-  Setting3,
-} from 'iconsax-react-native';
-
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  ImageBackground,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import AvatarGroup from '../../components/AvatarGroup';
-import CardComponent from '../../components/CardComponent';
-import CardImageConponent from '../../components/CardImageConponent';
-import CicularComponent from '../../components/CicularComponent';
-import Container from '../../components/Container';
-import ProgressBarComponent from '../../components/ProgressBarComponent';
-import RowComponent from '../../components/RowComponent';
-import SectionComponent from '../../components/SectionComponent';
-import SpaceComponent from '../../components/SpaceComponent';
-import TagComponent from '../../components/TagComponent';
-import TextComponent from '../../components/TextComponent';
-import TitleComponent from '../../components/TitleComponent';
-import {colors} from '../../constants/colors';
-import {fontFamilies} from '../../constants/fontFamilies';
-import {globalStyles} from '../../styles/globalStyles';
+import {Calendar, Clock} from 'iconsax-react-native';
 import auth from '@react-native-firebase/auth';
-import {Dimensions} from 'react-native';
-import SwitchComponent from '../../components/SwitchComponent';
+import database from '@react-native-firebase/database';
 import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
-import database from '@react-native-firebase/database';
+import React, {useEffect, useRef, useState} from 'react';
+import {Dimensions, ImageBackground, Platform, View} from 'react-native';
+
+import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import SettingScreen from '../setting/SettingScreen';
+import Container from '../../components/Container';
+import SectionComponent from '../../components/SectionComponent';
+import SwitchComponent from '../../components/SwitchComponent';
+import TextComponent from '../../components/TextComponent';
+import {globalStyles} from '../../styles/globalStyles';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -65,14 +33,16 @@ const HomeScreen = ({navigation}: any) => {
     computer4: 0,
   });
 
-  const [hlkRadarValue, setHlkRadarValue] = useState(0);
+  const hlkRadarValueRef = useRef(0);
+  const [hlkRadarValue, setHlkRadarValue] = useState(false);
+
   useEffect(() => {
     const databaseHLKRef = database().ref('HLK_RADAR/status');
 
-    // Lắng nghe sự thay đổi của dữ liệu
     const listener = databaseHLKRef.on('value', snapshot => {
-      const status = snapshot.val(); // Lấy giá trị status từ Firebase
-      setHlkRadarValue(status); // Cập nhật state
+      const status = snapshot.val();
+      hlkRadarValueRef.current = status;
+      setHlkRadarValue(prev => !prev); // Trigger một lần re-render khi giá trị thay đổi
     });
 
     return () => {
@@ -138,30 +108,6 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <View style={{flex: 1}}>
-      {/* <SectionComponent
-        styles={{
-          paddingVertical: 23,
-          backgroundColor: colors.bgColor,
-          marginTop: 0,
-          marginBottom: -10,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <RowComponent>
-          <View
-            style={{
-              flex: 1,
-            }}>
-            <TextComponent
-              styles={{color: 'black', fontWeight: 'bold', fontSize: 20}}
-              text="HomeScreen"
-            />
-          </View>
-          <TouchableOpacity onPress={handleSingout}>
-            <Logout size={34} color="coral" />
-          </TouchableOpacity>
-        </RowComponent>
-      </SectionComponent> */}
       <Container isScroll>
         <SectionComponent>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -298,18 +244,19 @@ const HomeScreen = ({navigation}: any) => {
                   width: 50,
                   height: 50,
                   borderRadius: 50 / 2,
-                  backgroundColor: hlkRadarValue === 1 ? '#5DF15A' : '#FF6347', // Xanh lá khi có người, đỏ khi không
+                  backgroundColor:
+                    hlkRadarValueRef.current === 1 ? '#5DF15A' : '#FF6347',
                   marginTop: 4,
                 }}
               />
 
               <TextComponent
-                color={hlkRadarValue === 1 ? '#5DF15A' : '#FF6347'}
+                color={hlkRadarValueRef.current === 1 ? '#5DF15A' : '#FF6347'}
                 size={20}
                 text={
-                  hlkRadarValue === 1
-                    ? '✔️ Có người trong phòng'
-                    : '⚠️ Không có người trong phòng'
+                  hlkRadarValueRef.current === 1
+                    ? '✅ Có người trong phòng'
+                    : '❌ Không có người trong phòng'
                 }
                 styles={{
                   marginTop: 10,

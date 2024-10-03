@@ -53,32 +53,32 @@ const Router = () => {
           let iconName;
           if (route.name === 'Home') {
             iconName = focused ? (
-              <Home2 size={38} color="green" />
+              <Home2 size={38} color="green" variant="Bold" />
             ) : (
               <Home2 size={32} color={color} />
             );
           } else if (route.name === 'Chart') {
             iconName = focused ? (
-              <ChartSquare size={38} color="green" />
+              <ChartSquare size={38} color="coral" variant="Bold" />
             ) : (
               <ChartSquare size={32} color={color} />
             );
           } else if (route.name === 'Notification') {
             iconName = focused ? (
-              <Notification1 size={38} color="green" />
+              <Notification1 size={38} color="orange" variant="Bold" />
             ) : (
               <Notification1 size={32} color={color} />
             );
           } else if (route.name === 'Setting') {
             iconName = focused ? (
-              <Setting3 size={38} color="green" />
+              <Setting3 size={38} color="black" variant="Bold" />
             ) : (
               <Setting3 size={32} color={color} />
             );
           }
           return iconName;
         },
-        tabBarActiveTintColor: 'green', // Màu cho tab được chọn
+        // tabBarActiveTintColor: 'green', // Màu cho tab được chọn
         tabBarInactiveTintColor: 'gray', // Màu cho tab không được chọn
       })}>
       <Tab.Screen
@@ -92,6 +92,7 @@ const Router = () => {
           headerTitleStyle: {
             fontSize: 28,
           },
+          tabBarActiveTintColor: 'green',
         }}
       />
       <Tab.Screen
@@ -105,6 +106,7 @@ const Router = () => {
           headerTitleStyle: {
             fontSize: 28,
           },
+          tabBarActiveTintColor: 'coral',
         }}
       />
       <Tab.Screen
@@ -118,6 +120,7 @@ const Router = () => {
           headerTitleStyle: {
             fontSize: 28,
           },
+          tabBarActiveTintColor: 'orange',
         }}
       />
       <Tab.Screen
@@ -131,6 +134,7 @@ const Router = () => {
           headerTitleStyle: {
             fontSize: 28,
           },
+          tabBarActiveTintColor: 'black',
         }}
       />
     </Tab.Navigator>
