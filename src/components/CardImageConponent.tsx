@@ -1,19 +1,20 @@
-import {View, Text, ImageBackground} from 'react-native';
+import {View, Text, ImageBackground, StyleProp, ViewStyle} from 'react-native';
 import React, {ReactNode} from 'react';
 import {globalStyles} from '../styles/globalStyles';
 interface Props {
   children: ReactNode;
   color?: string;
+  styles?: StyleProp<ViewStyle>;
 }
 
 const CardImageConponent = (props: Props) => {
-  const {children, color} = props;
+  const {children, color, styles} = props;
 
   return (
     <ImageBackground
       source={require('../assets/images/card-bg.png')}
       imageStyle={{borderRadius: 12}}
-      style={[globalStyles.card]}>
+      style={[globalStyles.card, styles]}>
       <View
         style={[
           {

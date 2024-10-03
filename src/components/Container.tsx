@@ -34,17 +34,23 @@ const Container = (props: Props) => {
         }}>
         {back && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ArrowLeft2 size={24} color={colors.text} />
+            <ArrowLeft2 size={32} color="black" />
           </TouchableOpacity>
         )}
         <View style={{flex: 1, zIndex: -1}}>
           {title && (
             <TextComponent
+              color="black"
               flex={0}
               font={fontFamilies.bold}
               size={16}
               text={title}
-              styles={{textAlign: 'center', marginLeft: back ? -24 : 0}}
+              styles={{
+                textAlign: 'center',
+                marginLeft: back ? -24 : 0,
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}
             />
           )}
         </View>

@@ -7,6 +7,10 @@ import {
   SearchNormal1,
   Calendar,
   Clock,
+  Home2,
+  Notification1,
+  ChartSquare,
+  Setting3,
 } from 'iconsax-react-native';
 
 import React, {useEffect, useRef, useState} from 'react';
@@ -39,6 +43,8 @@ import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import database from '@react-native-firebase/database';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import SettingScreen from '../setting/SettingScreen';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -58,6 +64,21 @@ const HomeScreen = ({navigation}: any) => {
     computer3: 0,
     computer4: 0,
   });
+
+  const [hlkRadarValue, setHlkRadarValue] = useState(0);
+  useEffect(() => {
+    const databaseHLKRef = database().ref('HLK_RADAR/status');
+
+    // Lắng nghe sự thay đổi của dữ liệu
+    const listener = databaseHLKRef.on('value', snapshot => {
+      const status = snapshot.val(); // Lấy giá trị status từ Firebase
+      setHlkRadarValue(status); // Cập nhật state
+    });
+
+    return () => {
+      databaseHLKRef.off('value', listener); // Dọn dẹp listener khi component bị unmount
+    };
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -98,13 +119,11 @@ const HomeScreen = ({navigation}: any) => {
   }, []);
 
   const handleSwitchChange = (computerId: any, newValue: any) => {
-    // Update the local state
     setComputerStatuses(prevStatuses => ({
       ...prevStatuses,
       [computerId]: newValue ? 1 : 0,
     }));
 
-    // console.log(computerStatuses);
     // Update the status in Firebase
     database()
       .ref(`Computer/${computerId}`)
@@ -119,7 +138,7 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <View style={{flex: 1}}>
-      <SectionComponent
+      {/* <SectionComponent
         styles={{
           paddingVertical: 23,
           backgroundColor: colors.bgColor,
@@ -139,10 +158,10 @@ const HomeScreen = ({navigation}: any) => {
             />
           </View>
           <TouchableOpacity onPress={handleSingout}>
-            <Logout size={30} color="coral" />
+            <Logout size={34} color="coral" />
           </TouchableOpacity>
         </RowComponent>
-      </SectionComponent>
+      </SectionComponent> */}
       <Container isScroll>
         <SectionComponent>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -159,62 +178,33 @@ const HomeScreen = ({navigation}: any) => {
                   font="semiBold"
                   size={20}
                   text={date}
-                  styles={{textTransform: 'capitalize'}}
+                  styles={{textTransform: 'capitalize', fontWeight: 'bold'}}
                 />
               </View>
             </CardImageConponent>
 
-            <CardImageConponent color="rgba(3, 255, 125, 0.6)">
+            <CardImageConponent styles={{}} color="rgba(3, 255, 125, 0.5)">
               <Clock size="32" color="#FF8A65" />
               <View
                 style={{
                   flex: 1,
                   justifyContent: 'center',
-                  alignItems: 'flex-end',
+                  alignItems: 'flex-start',
+                  padding: 2,
+                  width: 100,
                 }}>
                 <TextComponent
                   color="white"
                   font="semiBold"
                   size={20}
                   text={time}
+                  styles={{fontWeight: 'bold'}}
                 />
               </View>
             </CardImageConponent>
           </View>
         </SectionComponent>
-        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
-          {/* <View
-            style={[
-              globalStyles.inputContainer,
-              {
-                flex: 1,
-                width: screenWidth - 40,
-                backgroundColor: '#5F7990',
-                justifyContent: 'center',
-                alignItems: 'center',
-              },
-            ]}>
-            <TextComponent
-              styles={[
-                {
-                  color: '#26F2CD',
-                  fontWeight: 'bold',
-                },
-              ]}
-              text="HLK Radar Sensor"
-            />
-            <TextComponent text="Trạng thái cảm biến" />
-
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
-                backgroundColor: '#5DF15A',
-                marginTop: 4,
-              }}></View>
-          </View> */}
-
+        {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <ImageBackground
             source={require('../../assets/images/logo-iuh.png')}
             imageStyle={{borderRadius: 12}}
@@ -258,9 +248,78 @@ const HomeScreen = ({navigation}: any) => {
                   width: 50,
                   height: 50,
                   borderRadius: 50 / 2,
-                  backgroundColor: '#5DF15A',
+                  backgroundColor: '#5DF15A', //mau xanh
                   marginTop: 4,
                 }}></View>
+            </View>
+          </ImageBackground>
+        </SectionComponent> */}
+
+        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
+          <ImageBackground
+            source={require('../../assets/images/logo-iuh.png')}
+            imageStyle={{borderRadius: 12}}
+            style={[
+              globalStyles.card,
+              {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(113, 77, 217, 0.2)',
+                borderRadius: 14,
+              },
+            ]}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(190, 198, 200, 0.6)',
+                borderRadius: 12,
+                width: screenWidth - 40,
+              }}>
+              <TextComponent
+                styles={{
+                  color: 'purple',
+                  fontWeight: 'bold',
+                }}
+                text="HLK Radar Sensor"
+                size={20}
+              />
+              <TextComponent
+                color="black"
+                size={20}
+                text="Trạng thái cảm biến"
+                styles={{fontWeight: 'bold'}}
+              />
+
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50 / 2,
+                  backgroundColor: hlkRadarValue === 1 ? '#5DF15A' : '#FF6347', // Xanh lá khi có người, đỏ khi không
+                  marginTop: 4,
+                }}
+              />
+
+              <TextComponent
+                color={hlkRadarValue === 1 ? '#5DF15A' : '#FF6347'}
+                size={20}
+                text={
+                  hlkRadarValue === 1
+                    ? '✔️ Có người trong phòng'
+                    : '⚠️ Không có người trong phòng'
+                }
+                styles={{
+                  marginTop: 10,
+                  backgroundColor: 'rgba(226, 238, 240, 1)',
+                  paddingVertical: 8,
+                  paddingHorizontal: 10,
+                  borderRadius: 12,
+                  marginBottom: 10,
+                }}
+              />
             </View>
           </ImageBackground>
         </SectionComponent>
@@ -642,33 +701,6 @@ const HomeScreen = ({navigation}: any) => {
           </CardComponent>
         </SectionComponent> */}
       </Container>
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          right: 0,
-          left: 0,
-          padding: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        {/* <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => navigation.navigate('AddNewTask')}
-          style={[
-            globalStyles.row,
-            {
-              backgroundColor: colors.blue,
-              padding: 10,
-              borderRadius: 12,
-              paddingVertical: 14,
-              width: '80%',
-            },
-          ]}>
-          <TextComponent text="Add new tasks" flex={0} />
-          <Add size={22} color={colors.white} />
-        </TouchableOpacity> */}
-      </View>
     </View>
   );
 };
