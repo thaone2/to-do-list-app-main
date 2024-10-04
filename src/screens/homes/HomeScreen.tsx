@@ -4,7 +4,14 @@ import database from '@react-native-firebase/database';
 import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, ImageBackground, Platform, View} from 'react-native';
+import {
+  Button,
+  Dimensions,
+  ImageBackground,
+  Platform,
+  TextInput,
+  View,
+} from 'react-native';
 
 import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
@@ -13,6 +20,7 @@ import SectionComponent from '../../components/SectionComponent';
 import SwitchComponent from '../../components/SwitchComponent';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
+import {Text} from 'react-native-svg';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -26,7 +34,32 @@ const HomeScreen = ({navigation}: any) => {
   const [time, setTime] = useState(timeRef.current);
   const [date, setDate] = useState(dateRef.current);
 
+  const [message, setMessage] = useState('');
+  const [triggerSend, setTriggerSend] = useState(false); // trigger to detect button press
+
+  useEffect(() => {
+    if (triggerSend) {
+      const ref = database().ref('Test1');
+      ref
+        .push()
+        .set({
+          date: new Date().toLocaleString(), // sử dụng thời gian hiện tại
+          message: message,
+        })
+        .then(() => console.log('Data pushed to Firebase'))
+        .catch(error => console.log('Error:', error));
+
+      // Reset trigger
+      setTriggerSend(false);
+    }
+  }, [triggerSend, message]);
+
+  const handlePress = () => {
+    setTriggerSend(true);
+  };
+
   const [computerStatuses, setComputerStatuses] = useState({
+    autoManual: 0,
     computer1: 0,
     computer2: 0,
     computer3: 0,
@@ -74,6 +107,7 @@ const HomeScreen = ({navigation}: any) => {
       const data = snapshot.val();
       if (data) {
         setComputerStatuses({
+          autoManual: data.autoManual?.status || 0,
           computer1: data.computer1?.status || 0,
           computer2: data.computer2?.status || 0,
           computer3: data.computer3?.status || 0,
@@ -108,6 +142,15 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <View style={{flex: 1}}>
+      <View>
+        <Text>Enter a message:</Text>
+        <TextInput
+          value={message}
+          onChangeText={text => setMessage(text)}
+          placeholder="Enter a message"
+        />
+        <Button title="Send" onPress={handlePress} />
+      </View>
       <Container isScroll>
         <SectionComponent>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -136,13 +179,15 @@ const HomeScreen = ({navigation}: any) => {
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'flex-start',
-                  padding: 2,
-                  width: 100,
+                  // padding: 2,
+                  paddingVertical: 10,
+                  marginHorizontal: 6,
+                  width: 65,
                 }}>
                 <TextComponent
                   color="white"
                   font="semiBold"
-                  size={20}
+                  size={15}
                   text={time}
                   styles={{fontWeight: 'bold'}}
                 />
@@ -272,6 +317,51 @@ const HomeScreen = ({navigation}: any) => {
         </SectionComponent>
 
         {/* computer */}
+
+        <SectionComponent
+          styles={{
+            flex: 1,
+            flexDirection: 'row',
+
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <ComputerImageComponent
+            styles={{
+              borderRadius: 12,
+              paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
+              // paddingVertical: 12,
+              backgroundColor: 'rgba(106, 248, 253, 0.3)',
+              width: screenWidth - 40,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  padding: 6,
+                  borderRadius: 10,
+                }}
+                color="gray"
+                size={18}
+                text="Auto / Manual control PC"
+              />
+              <SwitchComponent
+                showConfirmationDialog={true}
+                styles={{paddingVertical: 8}}
+                value={computerStatuses.computer1 === 1}
+                onValueChange={value => handleSwitchChange('computer1', value)}
+              />
+            </View>
+          </ComputerImageComponent>
+        </SectionComponent>
+
         <SectionComponent
           styles={{
             flex: 1,

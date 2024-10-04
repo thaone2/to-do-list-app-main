@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import HomeScreen from '../screens/homes/HomeScreen';
 import AddNewTask from '../screens/tasks/AddNewTask';
 import SearchScreen from '../screens/SearchScreen';
@@ -18,12 +18,37 @@ import {
   Setting3,
 } from 'iconsax-react-native';
 import {colors} from '../constants/colors';
+import {Keyboard} from 'react-native';
 
 const Router = () => {
   const [isLogin, setIsLogin] = useState(false);
 
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+
+  const keyboardVisible = useRef(false);
+  const [tabBarHeight, setTabBarHeight] = useState(80); // Dùng state để quản lý tabBarHeight
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        keyboardVisible.current = true;
+        setTabBarHeight(0); // Ẩn tab bar khi bàn phím mở
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        keyboardVisible.current = false;
+        setTabBarHeight(80); // Hiện tab bar khi bàn phím đóng
+      },
+    );
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   const MainNavigator = (
     // <Stack.Navigator
     //   screenOptions={{
@@ -38,12 +63,17 @@ const Router = () => {
     // </Stack.Navigator>
 
     // code gpt
+
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarStyle: {
-          height: 80,
-          paddingBottom: 10,
-          paddingTop: 10,
+          // height: 80,
+          // paddingBottom: 10,
+          // paddingTop: 10,
+
+          height: tabBarHeight,
+          paddingBottom: tabBarHeight > 0 ? 10 : 0,
+          paddingTop: tabBarHeight > 0 ? 10 : 0,
         },
         tabBarLabelStyle: {
           fontSize: 14,
