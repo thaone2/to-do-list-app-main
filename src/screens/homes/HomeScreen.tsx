@@ -1,17 +1,10 @@
-import {Calendar, Clock} from 'iconsax-react-native';
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
+import {Calendar, Clock} from 'iconsax-react-native';
 import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  Button,
-  Dimensions,
-  ImageBackground,
-  Platform,
-  TextInput,
-  View,
-} from 'react-native';
+import {Dimensions, ImageBackground, Platform, View} from 'react-native';
 
 import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
@@ -20,7 +13,6 @@ import SectionComponent from '../../components/SectionComponent';
 import SwitchComponent from '../../components/SwitchComponent';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
-import {Text} from 'react-native-svg';
 
 const HomeScreen = ({navigation}: any) => {
   const handleSingout = async () => {
@@ -29,14 +21,14 @@ const HomeScreen = ({navigation}: any) => {
 
   const screenWidth = Dimensions.get('window').width;
   const timeRef = useRef(moment().format('HH:mm:ss'));
-  const dateRef = useRef(moment().format('dddd, DD/MM/YYYY')); // Hiển thị thứ
+  const dateRef = useRef(moment().format('dddd, DD-MM-YYYY')); // Hiển thị thứ
 
   const [time, setTime] = useState(timeRef.current);
   const [date, setDate] = useState(dateRef.current);
 
   const [message, setMessage] = useState('');
   const [triggerSend, setTriggerSend] = useState(false); // trigger to detect button press
-
+  // code push message
   useEffect(() => {
     if (triggerSend) {
       const ref = database().ref('Test1');
@@ -58,17 +50,9 @@ const HomeScreen = ({navigation}: any) => {
     setTriggerSend(true);
   };
 
-  const [computerStatuses, setComputerStatuses] = useState({
-    autoManual: 0,
-    computer1: 0,
-    computer2: 0,
-    computer3: 0,
-    computer4: 0,
-  });
-
   const hlkRadarValueRef = useRef(0);
   const [hlkRadarValue, setHlkRadarValue] = useState(false);
-
+  //useEff của hlk radar
   useEffect(() => {
     const databaseHLKRef = database().ref('HLK_RADAR/status');
 
@@ -100,9 +84,30 @@ const HomeScreen = ({navigation}: any) => {
     };
   }, []);
 
-  useEffect(() => {
-    const databaseRef = database().ref('Computer');
+  const [computerStatuses, setComputerStatuses] = useState({
+    autoManual: 0,
+    computer1: 0,
+    computer2: 0,
+    computer3: 0,
+    computer4: 0,
+  });
+  const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
 
+  const getCurrentDateTime = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  useEffect(() => {
+    if (!lastUpdateTime) return;
+
+    const databaseRef = database().ref(`Computer/${lastUpdateTime}`);
     const listener = databaseRef.on('value', snapshot => {
       const data = snapshot.val();
       if (data) {
@@ -116,33 +121,64 @@ const HomeScreen = ({navigation}: any) => {
       }
     });
 
-    // Clean up the listener
     return () => {
       databaseRef.off('value', listener);
     };
+  }, [lastUpdateTime]);
+  //useEffect cập nhật lại dữ liệu cuối củng của computer
+  useEffect(() => {
+    const fetchLastUpdateTime = async () => {
+      const latestRef = database().ref('Computer'); // Đường dẫn tới dữ liệu máy tính
+      const snapshot = await latestRef
+        .orderByKey()
+        .limitToLast(1)
+        .once('value');
+      const data = snapshot.val();
+
+      if (data) {
+        const lastKey = Object.keys(data)[0];
+        setLastUpdateTime(lastKey);
+      }
+    };
+
+    fetchLastUpdateTime();
   }, []);
 
   const handleSwitchChange = (computerId: any, newValue: any) => {
-    setComputerStatuses(prevStatuses => ({
-      ...prevStatuses,
+    const newStatus = {
+      ...computerStatuses,
       [computerId]: newValue ? 1 : 0,
-    }));
+    };
 
-    // Update the status in Firebase
+    setComputerStatuses(newStatus);
+
+    const currentTimeKey = getCurrentDateTime();
+
+    const firebaseStatus = {
+      autoManual: {status: newStatus.autoManual},
+      computer1: {status: newStatus.computer1},
+      computer2: {status: newStatus.computer2},
+      computer3: {status: newStatus.computer3},
+      computer4: {status: newStatus.computer4},
+    };
+
     database()
-      .ref(`Computer/${computerId}`)
-      .set({status: newValue ? 1 : 0})
+      .ref(`Computer/${currentTimeKey}`)
+      .set(firebaseStatus)
       .then(() => {
-        console.log(`Status of ${computerId} updated successfully.`);
+        setLastUpdateTime(currentTimeKey);
+        console.log(
+          `Status of ${computerId} updated successfully at ${currentTimeKey}.`,
+        );
       })
-      .catch(error => {
+      .catch((error: any) => {
         console.error(`Failed to update ${computerId} status:`, error);
       });
   };
 
   return (
     <View style={{flex: 1}}>
-      <View>
+      {/* <View>
         <Text>Enter a message:</Text>
         <TextInput
           value={message}
@@ -150,7 +186,7 @@ const HomeScreen = ({navigation}: any) => {
           placeholder="Enter a message"
         />
         <Button title="Send" onPress={handlePress} />
-      </View>
+      </View> */}
       <Container isScroll>
         <SectionComponent>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -195,56 +231,6 @@ const HomeScreen = ({navigation}: any) => {
             </CardImageConponent>
           </View>
         </SectionComponent>
-        {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
-          <ImageBackground
-            source={require('../../assets/images/logo-iuh.png')}
-            imageStyle={{borderRadius: 12}}
-            style={[
-              globalStyles.card,
-              {
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(113, 77, 217, 0.2)',
-                borderRadius: 14,
-              },
-            ]}>
-            <View
-              style={[
-                {
-                  flex: 1,
-                  borderRadius: 12,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                },
-              ]}>
-              <TextComponent
-                styles={[
-                  {
-                    color: 'white',
-                    fontWeight: 'bold',
-                  },
-                ]}
-                text="HLK Radar Sensor"
-                size={18}
-              />
-              <TextComponent
-                color="black"
-                size={14}
-                text="Trạng thái cảm biến"
-              />
-
-              <View
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50 / 2,
-                  backgroundColor: '#5DF15A', //mau xanh
-                  marginTop: 4,
-                }}></View>
-            </View>
-          </ImageBackground>
-        </SectionComponent> */}
 
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <ImageBackground
@@ -317,7 +303,6 @@ const HomeScreen = ({navigation}: any) => {
         </SectionComponent>
 
         {/* computer */}
-
         <SectionComponent
           styles={{
             flex: 1,
@@ -355,8 +340,8 @@ const HomeScreen = ({navigation}: any) => {
               <SwitchComponent
                 showConfirmationDialog={true}
                 styles={{paddingVertical: 8}}
-                value={computerStatuses.computer1 === 1}
-                onValueChange={value => handleSwitchChange('computer1', value)}
+                value={computerStatuses.autoManual === 1}
+                onValueChange={value => handleSwitchChange('autoManual', value)}
               />
             </View>
           </ComputerImageComponent>
@@ -371,6 +356,7 @@ const HomeScreen = ({navigation}: any) => {
             alignItems: 'center',
           }}>
           <ComputerImageComponent
+            disable={computerStatuses.autoManual === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -400,10 +386,12 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer1 === 1}
                 onValueChange={value => handleSwitchChange('computer1', value)}
+                disabled={computerStatuses.autoManual === 1}
               />
             </View>
           </ComputerImageComponent>
           <ComputerImageComponent
+            disable={computerStatuses.autoManual === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -433,6 +421,7 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer2 === 1}
                 onValueChange={value => handleSwitchChange('computer2', value)}
+                disabled={computerStatuses.autoManual === 1}
               />
             </View>
           </ComputerImageComponent>
@@ -446,6 +435,7 @@ const HomeScreen = ({navigation}: any) => {
             alignItems: 'center',
           }}>
           <ComputerImageComponent
+            disable={computerStatuses.autoManual === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -475,10 +465,12 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer3 === 1}
                 onValueChange={value => handleSwitchChange('computer3', value)}
+                disabled={computerStatuses.autoManual === 1}
               />
             </View>
           </ComputerImageComponent>
           <ComputerImageComponent
+            disable={computerStatuses.autoManual === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -508,6 +500,7 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer4 === 1}
                 onValueChange={value => handleSwitchChange('computer4', value)}
+                disabled={computerStatuses.autoManual === 1}
               />
             </View>
           </ComputerImageComponent>
