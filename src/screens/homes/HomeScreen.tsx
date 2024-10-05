@@ -67,6 +67,59 @@ const HomeScreen = ({navigation}: any) => {
     };
   }, []);
 
+  const computer1Temp = useRef(0);
+  const computer2Temp = useRef(0);
+  const computer3Temp = useRef(0);
+  const computer4Temp = useRef(0);
+
+  // const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchLastTemperatureData = async () => {
+      const temperatureRef = database().ref('Temperatures');
+      const snapshot = await temperatureRef
+        .orderByKey()
+        .limitToLast(1)
+        .once('value');
+      const data = snapshot.val();
+
+      if (data) {
+        const lastKey = Object.keys(data)[0]; // Lấy thời gian cập nhật cuối cùng
+        setLastUpdateTime(lastKey);
+
+        const latestData = data[lastKey];
+        if (latestData) {
+          computer1Temp.current = latestData.computer1.temperature || 0;
+          computer2Temp.current = latestData.computer2.temperature || 0;
+          computer3Temp.current = latestData.computer3.temperature || 0;
+          computer4Temp.current = latestData.computer4.temperature || 0;
+        }
+      }
+    };
+
+    fetchLastTemperatureData();
+  }, []);
+
+  //useEffect cập nhật lại dữ liệu cuối củng của computer
+  const latestRef = database().ref('Computer');
+  useEffect(() => {
+    const fetchLastUpdateTime = async () => {
+      // const latestRef = database().ref('Computer'); // Đường dẫn tới dữ liệu máy tính
+      const snapshot = await latestRef
+        .orderByKey()
+        .limitToLast(1)
+        .once('value');
+      const data = snapshot.val();
+
+      if (data) {
+        const lastKey = Object.keys(data)[0];
+        setLastUpdateTime(lastKey);
+      }
+    };
+
+    fetchLastUpdateTime();
+  }, [latestRef]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const currentTime = moment().format('HH:mm:ss');
@@ -125,24 +178,6 @@ const HomeScreen = ({navigation}: any) => {
       databaseRef.off('value', listener);
     };
   }, [lastUpdateTime]);
-  //useEffect cập nhật lại dữ liệu cuối củng của computer
-  useEffect(() => {
-    const fetchLastUpdateTime = async () => {
-      const latestRef = database().ref('Computer'); // Đường dẫn tới dữ liệu máy tính
-      const snapshot = await latestRef
-        .orderByKey()
-        .limitToLast(1)
-        .once('value');
-      const data = snapshot.val();
-
-      if (data) {
-        const lastKey = Object.keys(data)[0];
-        setLastUpdateTime(lastKey);
-      }
-    };
-
-    fetchLastUpdateTime();
-  }, []);
 
   const handleSwitchChange = (computerId: any, newValue: any) => {
     const newStatus = {
@@ -201,7 +236,7 @@ const HomeScreen = ({navigation}: any) => {
                 <TextComponent
                   color="white"
                   font="semiBold"
-                  size={20}
+                  size={16}
                   text={date}
                   styles={{textTransform: 'capitalize', fontWeight: 'bold'}}
                 />
@@ -213,7 +248,7 @@ const HomeScreen = ({navigation}: any) => {
               <View
                 style={{
                   flex: 1,
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   alignItems: 'flex-start',
                   // padding: 2,
                   paddingVertical: 10,
@@ -223,7 +258,7 @@ const HomeScreen = ({navigation}: any) => {
                 <TextComponent
                   color="white"
                   font="semiBold"
-                  size={15}
+                  size={14}
                   text={time}
                   styles={{fontWeight: 'bold'}}
                 />
@@ -307,7 +342,6 @@ const HomeScreen = ({navigation}: any) => {
           styles={{
             flex: 1,
             flexDirection: 'row',
-
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
@@ -351,7 +385,6 @@ const HomeScreen = ({navigation}: any) => {
           styles={{
             flex: 1,
             flexDirection: 'row',
-            // width: screenWidth - 40,
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
@@ -378,8 +411,21 @@ const HomeScreen = ({navigation}: any) => {
                   borderRadius: 10,
                 }}
                 color="gray"
-                size={18}
+                size={16}
                 text="Computer 1"
+              />
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  // padding: 2,
+                  borderRadius: 10,
+                  // paddingHorizontal: 6,
+                  marginTop: 4,
+                }}
+                color="#F8C266"
+                size={13}
+                text={`Temp:  ${computer1Temp.current} ℃`}
               />
               <SwitchComponent
                 showConfirmationDialog={true}
@@ -413,8 +459,21 @@ const HomeScreen = ({navigation}: any) => {
                   borderRadius: 10,
                 }}
                 color="gray"
-                size={18}
+                size={16}
                 text="Computer 2"
+              />
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  // padding: 2,
+                  borderRadius: 10,
+                  // paddingHorizontal: 6,
+                  marginTop: 4,
+                }}
+                color="#F8C266"
+                size={13}
+                text={`Temp:  ${computer2Temp.current} ℃`}
               />
               <SwitchComponent
                 showConfirmationDialog={true}
@@ -457,8 +516,21 @@ const HomeScreen = ({navigation}: any) => {
                   borderRadius: 10,
                 }}
                 color="gray"
-                size={18}
+                size={16}
                 text="Computer 3"
+              />
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  // padding: 2,
+                  borderRadius: 10,
+                  // paddingHorizontal: 6,
+                  marginTop: 4,
+                }}
+                color="#F8C266"
+                size={13}
+                text={`Temp:  ${computer3Temp.current} ℃`}
               />
               <SwitchComponent
                 showConfirmationDialog={true}
@@ -492,8 +564,21 @@ const HomeScreen = ({navigation}: any) => {
                   borderRadius: 10,
                 }}
                 color="gray"
-                size={18}
+                size={16}
                 text="Computer 4"
+              />
+              <TextComponent
+                styles={{
+                  fontWeight: 'bold',
+                  backgroundColor: '#F2EAEA',
+                  // padding: 2,
+                  borderRadius: 10,
+                  // paddingHorizontal: 6,
+                  marginTop: 4,
+                }}
+                color="#F8C266"
+                size={13}
+                text={`Temp:  ${computer4Temp.current} ℃`}
               />
               <SwitchComponent
                 showConfirmationDialog={true}

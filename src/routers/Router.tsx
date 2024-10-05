@@ -1,24 +1,22 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect, useRef, useState} from 'react';
-import HomeScreen from '../screens/homes/HomeScreen';
-import AddNewTask from '../screens/tasks/AddNewTask';
-import SearchScreen from '../screens/SearchScreen';
-import LoginScreen from '../auth/LoginScreen';
 import auth from '@react-native-firebase/auth';
-import RegisterScreen from '../auth/RegisterScreen';
-import NotificationScreen from '../screens/notification/NotificationScreen';
-import ChartScreen from '../screens/chart/ChartScreen';
-import SettingScreen from '../screens/setting/SettingScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Keyboard} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ChartSquare,
-  Home,
   Home2,
   Notification1,
   Setting3,
 } from 'iconsax-react-native';
+
+import LoginScreen from '../auth/LoginScreen';
+import RegisterScreen from '../auth/RegisterScreen';
+import ChartScreen from '../screens/chart/ChartScreen';
+import HomeScreen from '../screens/homes/HomeScreen';
+import NotificationScreen from '../screens/notification/NotificationScreen';
+import SettingScreen from '../screens/setting/SettingScreen';
 import {colors} from '../constants/colors';
-import {Keyboard} from 'react-native';
 
 const Router = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -79,6 +77,7 @@ const Router = () => {
           fontSize: 14,
           fontWeight: 'bold',
         },
+
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
           if (route.name === 'Home') {
@@ -123,6 +122,8 @@ const Router = () => {
             fontSize: 28,
           },
           tabBarActiveTintColor: 'green',
+          title: 'My home',
+          // headerShadowVisible: true,
         }}
       />
       <Tab.Screen

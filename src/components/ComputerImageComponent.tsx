@@ -34,7 +34,7 @@ const ComputerImageComponent = (props: Props) => {
         style={{
           borderRadius: 12,
           flex: 1,
-          padding: 12,
+          padding: 9,
         }}>
         {/* Nếu disable, thêm lớp TouchableWithoutFeedback */}
         {disable ? (

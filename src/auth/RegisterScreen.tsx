@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import Container from '../components/Container';
-import TextComponent from '../components/TextComponent';
-import SectionComponent from '../components/SectionComponent';
-import TitleComponent from '../components/TitleComponent';
-import RowComponent from '../components/RowComponent';
-import InputComponent from '../components/InputComponent';
-import {Lock, Sms} from 'iconsax-react-native';
-import {colors} from '../constants/colors';
-import {Text, View} from 'react-native';
-import ButtonComponent from '../components/ButtonComponent';
-import {globalStyles} from '../styles/globalStyles';
-import SpaceComponent from '../components/SpaceComponent';
 import auth from '@react-native-firebase/auth';
+import {Lock, Sms} from 'iconsax-react-native';
+import React, {useEffect, useState} from 'react';
+import {Text} from 'react-native';
+import ButtonComponent from '../components/ButtonComponent';
+import Container from '../components/Container';
+import InputComponent from '../components/InputComponent';
+import RowComponent from '../components/RowComponent';
+import SectionComponent from '../components/SectionComponent';
+import SpaceComponent from '../components/SpaceComponent';
+import TextComponent from '../components/TextComponent';
+import TitleComponent from '../components/TitleComponent';
+import {colors} from '../constants/colors';
+import {globalStyles} from '../styles/globalStyles';
 
 const RegisterScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -61,7 +61,12 @@ const RegisterScreen = ({navigation}: any) => {
           justifyContent: 'center',
         }}>
         <RowComponent styles={{marginBottom: 16}}>
-          <TitleComponent color="white" text="SIGN IN" size={32} flex={0} />
+          <TitleComponent
+            color={colors.gray2}
+            text="SIGN IN"
+            size={32}
+            flex={0}
+          />
         </RowComponent>
         <InputComponent
           title="Email"
@@ -99,7 +104,7 @@ const RegisterScreen = ({navigation}: any) => {
         />
 
         <RowComponent styles={{marginTop: 20}}>
-          <Text style={[globalStyles.text]}>
+          <Text style={[globalStyles.text, {color: colors.gray2}]}>
             You have an account?{' '}
             <Text
               style={{color: 'coral'}}
