@@ -122,7 +122,7 @@ const Router = () => {
             fontSize: 28,
           },
           tabBarActiveTintColor: 'green',
-          title: 'My home',
+          title: 'Lab PC management',
           // headerShadowVisible: true,
         }}
       />
