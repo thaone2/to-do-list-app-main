@@ -45,7 +45,7 @@ const InputComponent = (props: Props) => {
 
   return (
     <View style={{marginBottom: 16}}>
-      {title && <TitleComponent text={title} />}
+      {title && <TitleComponent text={title} color="black" />}
       <RowComponent
         styles={[
           globalStyles.inputContainer,
@@ -89,8 +89,10 @@ const InputComponent = (props: Props) => {
         {affix && affix}
 
         {allowClear && value && (
-          <TouchableOpacity onPress={() => onChange('')}>
-            <AntDesign name="close" size={20} color="black" />
+          <TouchableOpacity
+            style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
+            onPress={() => onChange('')}>
+            <AntDesign name="close" size={30} color="black" />
           </TouchableOpacity>
         )}
 
