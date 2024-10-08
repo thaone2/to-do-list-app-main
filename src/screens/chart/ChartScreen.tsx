@@ -10,10 +10,9 @@ import {
   VictoryTooltip,
 } from 'victory-native';
 import Container from '../../components/Container';
-import TextComponent from '../../components/TextComponent';
-import {colors} from '../../constants/colors';
-import {globalStyles} from '../../styles/globalStyles';
 import SpaceComponent from '../../components/SpaceComponent';
+import TextComponent from '../../components/TextComponent';
+import {globalStyles} from '../../styles/globalStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -168,7 +167,13 @@ const ChartScreen: React.FC = () => {
             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
           />
           <ScrollView horizontal>
-            <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+            <VictoryChart
+              theme={VictoryTheme.material}
+              width={screenWidth}
+              animate={{
+                duration: 1000,
+                onLoad: {duration: 1000},
+              }}>
               <VictoryAxis
                 tickValues={realTimeData.labels}
                 style={{
@@ -190,7 +195,7 @@ const ChartScreen: React.FC = () => {
               />
               <VictoryScatter
                 data={realTimeDataRef.current}
-                size={5}
+                size={7}
                 style={{data: {fill: 'coral'}}}
                 labelComponent={<VictoryTooltip />}
                 events={[
@@ -200,9 +205,7 @@ const ChartScreen: React.FC = () => {
                       onPress: (event, props) => {
                         const {datum} = props;
                         Alert.alert(
-                          `Giá trị tích lũy ${datum.x} là: \n ${datum.y.toFixed(
-                            2,
-                          )} kWh`,
+                          `${datum.x} là: \n ${datum.y.toFixed(2)} kWh`,
                         );
                       },
                     },
@@ -221,7 +224,14 @@ const ChartScreen: React.FC = () => {
             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
           />
           <ScrollView horizontal>
-            <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+            <VictoryChart
+              theme={VictoryTheme.material}
+              width={screenWidth}
+              // animate={{
+              //   duration: 1000,
+              //   onLoad: {duration: 1000},
+              // }}
+            >
               <VictoryAxis
                 tickValues={realTimeData.labels.slice(1)}
                 style={{
@@ -248,7 +258,7 @@ const ChartScreen: React.FC = () => {
                   x: realTimeData.labels[i + 1],
                   y: parseFloat(y.toFixed(2)), // Làm tròn 2 chữ số thập phân
                 }))}
-                size={5}
+                size={7}
                 style={{data: {fill: 'blue'}}}
                 labels={({datum}) => `${datum.y} kWh`}
                 // labelComponent={<VictoryTooltip />}
@@ -306,7 +316,7 @@ const ChartScreen: React.FC = () => {
                   x: getLast12Months()[i], // Cập nhật x để lấy nhãn từ getLast12Months
                   y: parseFloat(y.toFixed(2)),
                 }))}
-                size={5}
+                size={7}
                 style={{data: {fill: 'orange'}}}
                 labels={({datum}) => `${datum.y} kWh`}
                 events={[
@@ -334,3 +344,685 @@ const ChartScreen: React.FC = () => {
 };
 
 export default ChartScreen;
+
+// import database from '@react-native-firebase/database';
+// import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react';
+// import {Alert, Dimensions, ScrollView, View} from 'react-native';
+// import {
+//   VictoryAxis,
+//   VictoryChart,
+//   VictoryLine,
+//   VictoryScatter,
+//   VictoryTheme,
+//   VictoryTooltip,
+// } from 'victory-native';
+// import Container from '../../components/Container';
+// import SpaceComponent from '../../components/SpaceComponent';
+// import TextComponent from '../../components/TextComponent';
+// import {globalStyles} from '../../styles/globalStyles';
+
+// const screenWidth = Dimensions.get('window').width;
+
+// const ChartScreen: React.FC = () => {
+//   const [realTimeData, setRealTimeData] = useState<any>({
+//     labels: [],
+//     datasets: [{data: []}],
+//   });
+//   const [monthlyUsage, setMonthlyUsage] = useState<number[]>([]); // Lượng điện sử dụng hàng tháng
+//   const [dailyUsage, setDailyUsage] = useState<number[]>([]); // Lượng điện sử dụng hàng ngày
+
+//   const realTimeDataRef = useRef<any>([]);
+
+//   // Tạo mảng 12 tháng gần nhất
+//   const getLast12Months = useMemo(() => {
+//     const result = [];
+//     const currentDate = new Date();
+//     for (let i = 0; i < 12; i++) {
+//       const month = new Date(
+//         currentDate.getFullYear(),
+//         currentDate.getMonth() - i,
+//         1,
+//       );
+//       result.unshift(`${month.getMonth() + 1}/${month.getFullYear()}`);
+//     }
+//     return result;
+//   }, []);
+
+//   // Sắp xếp dữ liệu theo thời gian
+//   const sortDataByTime = useCallback((rawData: any) => {
+//     const sortedKeys = Object.keys(rawData).sort((a: string, b: string) => {
+//       return new Date(a).getTime() - new Date(b).getTime();
+//     });
+//     return sortedKeys.reduce((sortedData: any, key: string) => {
+//       sortedData[key] = rawData[key];
+//       return sortedData;
+//     }, {});
+//   }, []);
+
+//   // Fetch dữ liệu hàng ngày hiện tại
+//   const fetchRealTimeData = useCallback(async () => {
+//     try {
+//       const snapshot = await database()
+//         .ref('/Energy_use')
+//         .orderByKey()
+//         .limitToLast(8)
+//         .once('value');
+//       let rawData = snapshot.val();
+//       if (rawData) {
+//         rawData = sortDataByTime(rawData);
+//         const labels = Object.keys(rawData);
+//         const datasets = [
+//           {data: Object.values(rawData).map((entry: any) => entry.totalEnergy)},
+//         ];
+//         setRealTimeData({labels, datasets});
+//         realTimeDataRef.current = datasets[0].data.map((y, i) => ({
+//           x: labels[i],
+//           y,
+//         }));
+
+//         const dailyUsageData = datasets[0].data
+//           .map((value, index, arr) =>
+//             index === 0 ? 0 : arr[index] - arr[index - 1],
+//           )
+//           .slice(1);
+//         setDailyUsage(dailyUsageData);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching real-time data:', error);
+//     }
+//   }, [realTimeData, sortDataByTime]);
+
+//   useEffect(() => {
+//     fetchRealTimeData();
+//   }, [fetchRealTimeData]);
+
+//   // Fetch dữ liệu từ Firebase cho dữ liệu hàng tháng
+//   const fetchMonthlyData = useCallback(async () => {
+//     try {
+//       const snapshot = await database()
+//         .ref('/Energy_use')
+//         .orderByKey()
+//         .once('value');
+//       const rawData = snapshot.val();
+//       if (rawData) {
+//         const sortedData = sortDataByTime(rawData);
+//         const labels = Object.keys(sortedData);
+//         const energyData = Object.values(sortedData).map(
+//           (entry: any) => entry.totalEnergy,
+//         );
+//         const monthlyUsageData: number[] = [];
+
+//         // Tính lượng điện mỗi tháng dựa trên dữ liệu cộng dồn
+//         for (
+//           let i = labels.length - 1;
+//           i >= 0 && monthlyUsageData.length < 12;
+//           i--
+//         ) {
+//           const currentDate = new Date(labels[i]);
+//           const currentMonth = currentDate.getMonth();
+//           const currentYear = currentDate.getFullYear();
+
+//           if (
+//             monthlyUsageData.length === 0 ||
+//             currentDate.getMonth() !== new Date(labels[i + 1]).getMonth()
+//           ) {
+//             const startOfMonthIndex = labels.findIndex(label => {
+//               const labelDate = new Date(label);
+//               return (
+//                 labelDate.getFullYear() === currentYear &&
+//                 labelDate.getMonth() === currentMonth
+//               );
+//             });
+
+//             const endOfMonthIndex = i;
+//             const startOfMonthEnergy = energyData[startOfMonthIndex];
+//             const endOfMonthEnergy = energyData[endOfMonthIndex];
+
+//             monthlyUsageData.unshift(endOfMonthEnergy - startOfMonthEnergy);
+//           }
+//         }
+
+//         setMonthlyUsage(monthlyUsageData);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching monthly data:', error);
+//     }
+//   }, [sortDataByTime]);
+
+//   useEffect(() => {
+//     fetchMonthlyData();
+//   }, [fetchMonthlyData]);
+
+//   const handleAlert = useCallback((datum: {x: any; y: number}) => {
+//     Alert.alert(`${datum.x} là: \n ${datum.y.toFixed(2)} kWh`);
+//   }, []);
+
+//   return (
+//     <View style={{flex: 1}}>
+//       <Container isScroll>
+//         <View
+//           style={{
+//             flex: 1,
+//             marginHorizontal: 10,
+//             backgroundColor: 'white',
+//             borderRadius: 20,
+//           }}>
+//           {/* Real-time Chart */}
+//           <TextComponent
+//             text="Realtime data"
+//             size={20}
+//             color="white"
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={realTimeData.labels}
+//                 style={{
+//                   tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+//               <VictoryLine
+//                 data={realTimeData.datasets[0].data.map((y: any, i: any) => ({
+//                   x: realTimeData.labels[i],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 style={{data: {stroke: '#c43a31'}}}
+//                 labels={({datum}) => `${datum.y} kWh`}
+//                 // labelComponent={<VictoryTooltip />}
+//               />
+//               <VictoryScatter
+//                 data={realTimeDataRef.current}
+//                 size={6}
+//                 style={{data: {fill: 'coral'}}}
+//                 labelComponent={<VictoryTooltip />}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => handleAlert(props.datum),
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView>
+
+//           {/* Histogram - Daily Usage */}
+//           <SpaceComponent height={14} />
+//           <TextComponent
+//             text="Lượng điện sử dụng trong 7 ngày trước"
+//             color="white"
+//             size={20}
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={realTimeData.labels.slice(1)}
+//                 style={{
+//                   tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+//               <VictoryLine
+//                 data={dailyUsage.map((y, i) => ({
+//                   x: realTimeData.labels[i + 1],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//               />
+//               <VictoryScatter
+//                 data={dailyUsage.map((y, i) => ({
+//                   x: realTimeData.labels[i + 1],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 size={6}
+//                 style={{data: {fill: 'blue'}}}
+//                 labels={({datum}) => `${datum.y} kWh`}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => handleAlert(props.datum),
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView>
+
+//           {/* Bar chart for monthly usage  bị lỏ nên comment*/}
+//           {/* <SpaceComponent height={14} />
+//           <TextComponent
+//             text="Lượng điện sử dụng trong 12 tháng gần nhất"
+//             color="white"
+//             size={20}
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart
+//               theme={VictoryTheme.material}
+//               // domainPadding={{x: 30, y: 0}}
+//               width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={getLast12Months}
+//                 style={{
+//                   tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+//               <VictoryLine
+//                 data={monthlyUsage.map((y, i) => ({
+//                   x: getLast12Months[i],
+//                   y: y.toFixed(2),
+//                 }))}
+//               />
+//               <VictoryScatter
+//                 data={monthlyUsage.map((y, i) => ({
+//                   x: getLast12Months[i],
+//                   y: y.toFixed(2),
+//                 }))}
+//                 size={5}
+//                 style={{data: {fill: 'purple'}}}
+//                 labels={({datum}) => `${datum.y} kWh`}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => handleAlert(props.datum),
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView> */}
+
+//           {/* Monthly Usage Chart */}
+//           <SpaceComponent height={14} />
+//           <TextComponent
+//             text="Lượng điện sử dụng hàng tháng"
+//             size={20}
+//             color="white"
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={getLast12Months} // Sử dụng hàm này để lấy nhãn tháng
+//                 style={{
+//                   tickLabels: {fontSize: 8, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+
+//               <VictoryLine
+//                 data={monthlyUsage.map((y, i) => ({
+//                   x: getLast12Months[i], // Cập nhật x để lấy nhãn từ getLast12Months
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 style={{data: {stroke: '#c43a31'}}}
+//               />
+
+//               <VictoryScatter
+//                 data={monthlyUsage.map((y, i) => ({
+//                   x: getLast12Months[i], // Cập nhật x để lấy nhãn từ getLast12Months
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 size={6}
+//                 style={{data: {fill: 'orange'}}}
+//                 labels={({datum}) => `${datum.y} kWh`}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => {
+//                         const {datum} = props;
+//                         Alert.alert(
+//                           `Lượng điện ${datum.x} là: \n \t ${datum.y.toFixed(
+//                             2,
+//                           )} kWh`,
+//                         );
+//                       },
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView>
+//         </View>
+//       </Container>
+//     </View>
+//   );
+// };
+
+// export default ChartScreen;
+
+// code gpt fixx lag
+// import database from '@react-native-firebase/database';
+// import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react';
+// import {Alert, Dimensions, ScrollView, View} from 'react-native';
+// import {
+//   VictoryAxis,
+//   VictoryChart,
+//   VictoryLine,
+//   VictoryScatter,
+//   VictoryTheme,
+//   VictoryTooltip,
+// } from 'victory-native';
+// import Container from '../../components/Container';
+// import SpaceComponent from '../../components/SpaceComponent';
+// import TextComponent from '../../components/TextComponent';
+// import {globalStyles} from '../../styles/globalStyles';
+
+// const screenWidth = Dimensions.get('window').width;
+
+// const ChartScreen: React.FC = () => {
+//   const [realTimeData, setRealTimeData] = useState<any>({
+//     labels: [],
+//     datasets: [{data: []}],
+//   });
+//   const [monthlyUsage, setMonthlyUsage] = useState<number[]>([]); // Lượng điện sử dụng hàng tháng
+//   const [dailyUsage, setDailyUsage] = useState<number[]>([]); // Lượng điện sử dụng hàng ngày
+
+//   const realTimeDataRef = useRef<any>([]);
+//   const alertRef = useRef<(datum: {x: any; y: number}) => void>();
+
+//   // Tạo mảng 12 tháng gần nhất
+//   const getLast12Months = useMemo(() => {
+//     const result = [];
+//     const currentDate = new Date();
+//     for (let i = 0; i < 12; i++) {
+//       const month = new Date(
+//         currentDate.getFullYear(),
+//         currentDate.getMonth() - i,
+//         1,
+//       );
+//       result.unshift(`${month.getMonth() + 1}/${month.getFullYear()}`);
+//     }
+//     return result;
+//   }, []);
+
+//   // Sắp xếp dữ liệu theo thời gian
+//   const sortDataByTime = useCallback((rawData: any) => {
+//     const sortedKeys = Object.keys(rawData).sort((a: string, b: string) => {
+//       return new Date(a).getTime() - new Date(b).getTime();
+//     });
+//     return sortedKeys.reduce((sortedData: any, key: string) => {
+//       sortedData[key] = rawData[key];
+//       return sortedData;
+//     }, {});
+//   }, []);
+
+//   // Fetch dữ liệu hàng ngày hiện tại
+//   const fetchRealTimeData = useCallback(async () => {
+//     try {
+//       const snapshot = await database()
+//         .ref('/Energy_use')
+//         .orderByKey()
+//         .limitToLast(8)
+//         .once('value');
+//       let rawData = snapshot.val();
+//       if (rawData) {
+//         rawData = sortDataByTime(rawData);
+//         const labels = Object.keys(rawData);
+//         const datasets = [
+//           {data: Object.values(rawData).map((entry: any) => entry.totalEnergy)},
+//         ];
+//         setRealTimeData({labels, datasets});
+//         realTimeDataRef.current = datasets[0].data.map((y, i) => ({
+//           x: labels[i],
+//           y,
+//         }));
+
+//         const dailyUsageData = datasets[0].data
+//           .map((value, index, arr) =>
+//             index === 0 ? 0 : arr[index] - arr[index - 1],
+//           )
+//           .slice(1);
+//         setDailyUsage(dailyUsageData);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching real-time data:', error);
+//     }
+//   }, [sortDataByTime]);
+
+//   useEffect(() => {
+//     fetchRealTimeData();
+//   }, [fetchRealTimeData]);
+
+//   // Fetch dữ liệu từ Firebase cho dữ liệu hàng tháng
+//   const fetchMonthlyData = useCallback(async () => {
+//     try {
+//       const snapshot = await database()
+//         .ref('/Energy_use')
+//         .orderByKey()
+//         .once('value');
+//       const rawData = snapshot.val();
+//       if (rawData) {
+//         const sortedData = sortDataByTime(rawData);
+//         const labels = Object.keys(sortedData);
+//         const energyData = Object.values(sortedData).map(
+//           (entry: any) => entry.totalEnergy,
+//         );
+//         const monthlyUsageData: number[] = [];
+
+//         // Tính lượng điện mỗi tháng dựa trên dữ liệu cộng dồn
+//         for (
+//           let i = labels.length - 1;
+//           i >= 0 && monthlyUsageData.length < 12;
+//           i--
+//         ) {
+//           const currentDate = new Date(labels[i]);
+//           const currentMonth = currentDate.getMonth();
+//           const currentYear = currentDate.getFullYear();
+
+//           if (
+//             monthlyUsageData.length === 0 ||
+//             currentDate.getMonth() !== new Date(labels[i + 1]).getMonth()
+//           ) {
+//             const startOfMonthIndex = labels.findIndex(label => {
+//               const labelDate = new Date(label);
+//               return (
+//                 labelDate.getFullYear() === currentYear &&
+//                 labelDate.getMonth() === currentMonth
+//               );
+//             });
+
+//             const endOfMonthIndex = i;
+//             const startOfMonthEnergy = energyData[startOfMonthIndex];
+//             const endOfMonthEnergy = energyData[endOfMonthIndex];
+
+//             monthlyUsageData.unshift(endOfMonthEnergy - startOfMonthEnergy);
+//           }
+//         }
+
+//         setMonthlyUsage(monthlyUsageData);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching monthly data:', error);
+//     }
+//   }, [sortDataByTime]);
+
+//   useEffect(() => {
+//     fetchMonthlyData();
+//   }, [fetchMonthlyData]);
+
+//   // Sử dụng ref để quản lý Alert
+//   alertRef.current = (datum: {x: any; y: number}) => {
+//     Alert.alert(`${datum.x} là: \n ${datum.y.toFixed(2)} kWh`);
+//   };
+
+//   return (
+//     <View style={{flex: 1}}>
+//       <Container isScroll>
+//         <View
+//           style={{
+//             flex: 1,
+//             marginHorizontal: 10,
+//             backgroundColor: 'white',
+//             borderRadius: 20,
+//           }}>
+//           {/* Real-time Chart */}
+//           <TextComponent
+//             text="Realtime data"
+//             size={20}
+//             color="white"
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={realTimeData.labels}
+//                 style={{
+//                   tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+//               <VictoryLine
+//                 data={realTimeData.datasets[0].data.map((y: any, i: any) => ({
+//                   x: realTimeData.labels[i],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 style={{data: {stroke: '#c43a31'}}}
+//                 labels={({datum}) => `${datum.y} kWh`}
+//               />
+//               <VictoryScatter
+//                 data={realTimeDataRef.current}
+//                 size={7}
+//                 style={{data: {fill: 'coral'}}}
+//                 labelComponent={<VictoryTooltip />}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => alertRef.current(props.datum),
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView>
+
+//           {/* Histogram - Daily Usage */}
+//           <SpaceComponent height={14} />
+//           <TextComponent
+//             text="Lượng điện sử dụng trong 7 ngày trước"
+//             color="white"
+//             size={20}
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={realTimeData.labels.slice(1)}
+//                 style={{
+//                   tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+//               <VictoryLine
+//                 data={dailyUsage.map((y, i) => ({
+//                   x: realTimeData.labels[i + 1],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//               />
+//               <VictoryScatter
+//                 data={dailyUsage.map((y, i) => ({
+//                   x: realTimeData.labels[i + 1],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 size={7}
+//                 style={{data: {fill: 'blue'}}}
+//                 // labelComponent={<VictoryTooltip />}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => alertRef.current(props.datum),
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView>
+
+//           {/* Monthly Usage */}
+//           <SpaceComponent height={14} />
+//           <TextComponent
+//             text="Lượng điện sử dụng trong 12 tháng gần nhất"
+//             size={20}
+//             color="white"
+//             styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
+//           />
+//           <ScrollView horizontal>
+//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+//               <VictoryAxis
+//                 tickValues={getLast12Months}
+//                 style={{
+//                   tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+//                 }}
+//               />
+//               <VictoryAxis
+//                 dependentAxis
+//                 tickFormat={t => `${t} kWh`}
+//                 style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+//               />
+//               <VictoryLine
+//                 data={monthlyUsage.map((y, i) => ({
+//                   x: getLast12Months[i],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 style={{data: {stroke: '#c43a31'}}}
+//               />
+//               <VictoryScatter
+//                 data={monthlyUsage.map((y, i) => ({
+//                   x: getLast12Months[i],
+//                   y: parseFloat(y.toFixed(2)),
+//                 }))}
+//                 size={7}
+//                 style={{data: {fill: 'blue'}}}
+//                 // labelComponent={<VictoryTooltip />}
+//                 events={[
+//                   {
+//                     target: 'data',
+//                     eventHandlers: {
+//                       onPress: (event, props) => alertRef.current(props.datum),
+//                     },
+//                   },
+//                 ]}
+//               />
+//             </VictoryChart>
+//           </ScrollView>
+//         </View>
+//       </Container>
+//     </View>
+//   );
+// };
+
+// export default ChartScreen;
