@@ -1,7 +1,7 @@
-import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React, {ReactNode} from 'react';
-import TextComponent from './TextComponent';
+import {ActivityIndicator, TouchableOpacity} from 'react-native';
 import {colors} from '../constants/colors';
+import TextComponent from './TextComponent';
 
 interface Props {
   text: string;

@@ -1,545 +1,336 @@
-// import React, {useEffect, useState, useRef} from 'react';
-// import {Text, View, ScrollView, TouchableOpacity, Alert} from 'react-native';
-// import Container from '../../components/Container';
-// import TextComponent from '../../components/TextComponent';
-// import {globalStyles} from '../../styles/globalStyles';
-// import {Dimensions} from 'react-native';
-// import database from '@react-native-firebase/database';
-// import {
-//   VictoryChart,
-//   VictoryLine,
-//   VictoryAxis,
-//   VictoryTheme,
-//   VictoryTooltip,
-// } from 'victory-native';
-// import InputComponent from '../../components/InputComponent';
-
-// const screenWidth = Dimensions.get('window').width;
-
-// interface ChartData {
-//   labels: string[];
-//   datasets: {data: number[]}[];
-// }
-
-// const ChartScreen: React.FC = () => {
-//   const [data, setData] = useState<ChartData>({
-//     labels: [],
-//     datasets: [{data: []}],
-//   });
-//   const [dailyData, setDailyData] = useState<ChartData>({
-//     labels: [],
-//     datasets: [{data: []}],
-//   });
-//   const [weeklyData, setWeeklyData] = useState<ChartData>({
-//     labels: [],
-//     datasets: [{data: []}],
-//   });
-//   const [monthlyData, setMonthlyData] = useState<ChartData>({
-//     labels: [],
-//     datasets: [{data: []}],
-//   });
-//   const [displayCount, setDisplayCount] = useState<number>(5);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [inputValue, setInputValue] = useState<string>('');
-//   const chartRef = useRef<any>(null);
-
-//   const formatLabels = (rawLabels: string[]) => {
-//     const formattedLabels: string[] = [];
-//     let previousDate = '';
-//     rawLabels.forEach((label, index) => {
-//       const [datePart, timePart] = label.split(' ');
-//       if (datePart === previousDate) {
-//         formattedLabels.push(timePart);
-//       } else {
-//         formattedLabels.push(`${datePart}\n${timePart}`);
-//         previousDate = datePart;
-//       }
-//       if (rawLabels.length > 10 && index % 2 !== 0) {
-//         formattedLabels[index] = '';
-//       }
-//     });
-//     return formattedLabels;
-//   };
-
-//   const sortDataByTime = (rawData: any) => {
-//     const sortedKeys = Object.keys(rawData).sort((a: string, b: string) => {
-//       return new Date(a).getTime() - new Date(b).getTime();
-//     });
-//     return sortedKeys.reduce((sortedData: any, key: string) => {
-//       sortedData[key] = rawData[key];
-//       return sortedData;
-//     }, {});
-//   };
-
-//   const calculateGroupedData = (groupedData: any) => {
-//     const calculatedData: any = {};
-//     let prevValue = 0;
-//     Object.keys(groupedData).forEach(key => {
-//       if (!prevValue) {
-//         prevValue = groupedData[key];
-//       } else {
-//         calculatedData[key] = groupedData[key] - prevValue;
-//         prevValue = groupedData[key];
-//       }
-//     });
-//     return calculatedData;
-//   };
-
-//   const groupDataBy = (rawData: any, groupBy: string) => {
-//     const groupedData: any = {};
-//     Object.keys(rawData).forEach(timestamp => {
-//       const date = new Date(timestamp);
-//       let key: string;
-//       switch (groupBy) {
-//         case 'day':
-//           key = date.toISOString().split('T')[0]; // YYYY-MM-DD
-//           break;
-//         case 'week':
-//           key = `${date.getFullYear()}-W${Math.ceil((date.getDate() - 1) / 7)}`; // YYYY-WW
-//           break;
-//         case 'month':
-//           key = `${date.getFullYear()}-${date.getMonth() + 1}`; // YYYY-MM
-//           break;
-//         case 'year':
-//           key = `${date.getFullYear()}`; // YYYY
-//           break;
-//         default:
-//           key = date.toISOString();
-//       }
-//       if (!groupedData[key]) {
-//         groupedData[key] = 0;
-//       }
-//       groupedData[key] += rawData[timestamp].totalEnergy;
-//     });
-//     return groupedData;
-//   };
-
-//   const fetchData = async () => {
-//     try {
-//       const snapshot = await database()
-//         .ref('/Energy_use')
-//         .orderByKey()
-//         .limitToLast(displayCount)
-//         .once('value');
-//       let rawData = snapshot.val();
-
-//       if (rawData) {
-//         rawData = sortDataByTime(rawData);
-
-//         const labels = Object.keys(rawData);
-//         const formattedLabels = formatLabels(labels);
-//         const datasets = [
-//           {
-//             data: Object.values(rawData).map(entry => entry.totalEnergy),
-//           },
-//         ];
-
-//         setData({labels: formattedLabels, datasets});
-
-//         const daily = calculateGroupedData(groupDataBy(rawData, 'day'));
-//         const weekly = calculateGroupedData(groupDataBy(rawData, 'week'));
-//         const monthly = calculateGroupedData(groupDataBy(rawData, 'month'));
-
-//         setDailyData({
-//           labels: Object.keys(daily),
-//           datasets: [{data: Object.values(daily)}],
-//         });
-//         setWeeklyData({
-//           labels: Object.keys(weekly),
-//           datasets: [{data: Object.values(weekly)}],
-//         });
-//         setMonthlyData({
-//           labels: Object.keys(monthly),
-//           datasets: [{data: Object.values(monthly)}],
-//         });
-//       }
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, [displayCount]);
-
-//   const handleSubmit = () => {
-//     const parsedValue = parseInt(inputValue, 10);
-//     if (!isNaN(parsedValue)) {
-//       setDisplayCount(parsedValue);
-//     } else {
-//       Alert.alert('Vui lòng nhập số hợp lệ');
-//     }
-//   };
-
-//   if (loading) {
-//     return (
-//       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-//         <Text>Loading data...</Text>
-//       </View>
-//     );
-//   }
-
-//   return (
-//     <View style={{flex: 1}}>
-//       <Container isScroll>
-//         <View style={{flex: 1, marginHorizontal: 20}}>
-//           <InputComponent
-//             value={inputValue}
-//             onChange={setInputValue}
-//             placeholder="Nhập số lượng hiển thị"
-//             title="Số lượng hiển thị"
-//             type="numeric"
-//             allowClear
-//           />
-
-//           <TouchableOpacity
-//             onPress={handleSubmit}
-//             style={[
-//               globalStyles.inputContainer,
-//               {
-//                 flex: 1,
-//                 backgroundColor: 'coral',
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//               },
-//             ]}>
-//             <TextComponent
-//               text="Submit"
-//               styles={[
-//                 {
-//                   color: 'white',
-//                 },
-//               ]}
-//             />
-//           </TouchableOpacity>
-
-//           {/* Biểu đồ tổng theo ngày */}
-//           <TextComponent text="Tổng theo ngày" color="black" />
-//           <ScrollView horizontal>
-//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-//               <VictoryAxis
-//                 tickValues={dailyData.labels}
-//                 style={{
-//                   tickLabels: {fontSize: 10, angle: -45, textAnchor: 'end'},
-//                 }}
-//               />
-//               <VictoryAxis dependentAxis tickFormat={t => `${t} kWh`} />
-//               <VictoryLine
-//                 data={dailyData.datasets[0].data.map((y, i) => ({
-//                   x: dailyData.labels[i],
-//                   y,
-//                 }))}
-//                 style={{data: {stroke: '#c43a31'}}}
-//                 labels={({datum}) => `${datum.y} kWh`}
-//                 labelComponent={<VictoryTooltip />}
-//               />
-//             </VictoryChart>
-//           </ScrollView>
-
-//           {/* Biểu đồ tổng theo tuần */}
-//           <TextComponent text="Tổng theo tuần" color="black" />
-//           <ScrollView horizontal>
-//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-//               <VictoryAxis
-//                 tickValues={weeklyData.labels}
-//                 style={{
-//                   tickLabels: {fontSize: 10, angle: -45, textAnchor: 'end'},
-//                 }}
-//               />
-//               <VictoryAxis dependentAxis tickFormat={t => `${t} kWh`} />
-//               <VictoryLine
-//                 data={weeklyData.datasets[0].data.map((y, i) => ({
-//                   x: weeklyData.labels[i],
-//                   y,
-//                 }))}
-//                 style={{data: {stroke: '#c43a31'}}}
-//                 labels={({datum}) => `${datum.y} kWh`}
-//                 labelComponent={<VictoryTooltip />}
-//               />
-//             </VictoryChart>
-//           </ScrollView>
-
-//           {/* Biểu đồ tổng theo tháng */}
-//           <TextComponent text="Tổng theo tháng" color="black" />
-//           <ScrollView horizontal>
-//             <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-//               <VictoryAxis
-//                 tickValues={monthlyData.labels}
-//                 style={{
-//                   tickLabels: {fontSize: 10, angle: -45, textAnchor: 'end'},
-//                 }}
-//               />
-//               <VictoryAxis dependentAxis tickFormat={t => `${t} kWh`} />
-//               <VictoryLine
-//                 data={monthlyData.datasets[0].data.map((y, i) => ({
-//                   x: monthlyData.labels[i],
-//                   y,
-//                 }))}
-//                 style={{data: {stroke: '#c43a31'}}}
-//                 labels={({datum}) => `${datum.y} kWh`}
-//                 labelComponent={<VictoryTooltip />}
-//               />
-//             </VictoryChart>
-//           </ScrollView>
-//         </View>
-//       </Container>
-//     </View>
-//   );
-// };
-
-// export default ChartScreen;
-
-import React, {useEffect, useState} from 'react';
-import {Text, View, ScrollView} from 'react-native';
+import database from '@react-native-firebase/database';
+import React, {useEffect, useRef, useState} from 'react';
+import {Alert, Dimensions, ScrollView, View} from 'react-native';
 import {
+  VictoryAxis,
   VictoryChart,
   VictoryLine,
-  VictoryAxis,
+  VictoryScatter,
   VictoryTheme,
+  VictoryTooltip,
 } from 'victory-native';
-import database from '@react-native-firebase/database';
 import Container from '../../components/Container';
 import TextComponent from '../../components/TextComponent';
+import {colors} from '../../constants/colors';
 import {globalStyles} from '../../styles/globalStyles';
-import {Dimensions} from 'react-native';
+import SpaceComponent from '../../components/SpaceComponent';
 
 const screenWidth = Dimensions.get('window').width;
 
-const RealTimeChartScreen: React.FC = () => {
-  const [realTimeData, setRealTimeData] = useState<{x: number; y: number}[]>(
-    [],
-  );
-  const [maxElectricity, setMaxElectricity] = useState<number>(0);
-  const [dailyData, setDailyData] = useState<{x: number; y: number}[]>([]);
-  const [weeklyData, setWeeklyData] = useState<{x: number; y: number}[]>([]);
-  const [monthlyData, setMonthlyData] = useState<{x: number; y: number}[]>([]);
-  const [yearlyData, setYearlyData] = useState<{x: number; y: number}[]>([]);
+const ChartScreen: React.FC = () => {
+  const [realTimeData, setRealTimeData] = useState<any>({
+    labels: [],
+    datasets: [{data: []}],
+  });
+  const [monthlyUsage, setMonthlyUsage] = useState<number[]>([]); // Lượng điện sử dụng hàng tháng
+  const [dailyUsage, setDailyUsage] = useState<number[]>([]); // Lượng điện sử dụng hàng ngày
 
-  // Hàm xử lý khi dữ liệu mới từ Firebase
-  const handleDataUpdate = (dataSnapshot: any) => {
-    const data = dataSnapshot.val();
-    if (data) {
-      const sortedKeys = Object.keys(data).sort(
-        (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime(),
-      );
-      const realTimeArray = sortedKeys.map((key: string, index: number) => ({
-        // x: index,
-        x: new Date(key), // Dùng thời gian thay vì index
-        y: data[key].totalEnergy,
-      }));
-      setRealTimeData(realTimeArray);
+  const realTimeDataRef = useRef<any>([]);
 
-      // Cập nhật điện lượng cao nhất
-      const maxElectric = Math.max(...realTimeArray.map(item => item.y));
-      setMaxElectricity(maxElectric);
+  // Tạo mảng 12 tháng gần nhất
+  const getLast12Months = () => {
+    const result = [];
+    const currentDate = new Date();
+    for (let i = 0; i < 12; i++) {
+      const month = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - i,
+        1,
+      );
+      result.unshift(
+        `${month.getMonth() + 1}/${month.getFullYear()}`, // Tạo định dạng Tháng/MM/YYYY
+      );
+    }
+    return result;
+  };
 
-      // Xử lý dữ liệu cho biểu đồ ngày, tuần, tháng, năm
-      const daily = calculateGroupedData(groupDataBy(data, 'day'));
-      const weekly = calculateGroupedData(groupDataBy(data, 'week'));
-      const monthly = calculateGroupedData(groupDataBy(data, 'month'));
-      const yearly = calculateGroupedData(groupDataBy(data, 'year'));
+  // Sắp xếp dữ liệu theo thời gian
+  const sortDataByTime = (rawData: any) => {
+    const sortedKeys = Object.keys(rawData).sort((a: string, b: string) => {
+      return new Date(a).getTime() - new Date(b).getTime();
+    });
+    return sortedKeys.reduce((sortedData: any, key: string) => {
+      sortedData[key] = rawData[key];
+      return sortedData;
+    }, {});
+  };
+  // Fetch dữ liệu hàng ngày hiện tại
+  const fetchRealTimeData = async () => {
+    try {
+      const snapshot = await database()
+        .ref('/Energy_use')
+        .orderByKey()
+        .limitToLast(8)
+        .once('value');
+      let rawData = snapshot.val();
+      if (rawData) {
+        rawData = sortDataByTime(rawData);
+        const labels = Object.keys(rawData);
+        const datasets = [
+          {data: Object.values(rawData).map((entry: any) => entry.totalEnergy)},
+        ];
+        setRealTimeData({labels, datasets});
+        realTimeDataRef.current = datasets[0].data.map((y, i) => ({
+          x: labels[i],
+          y,
+        }));
 
-      setDailyData(
-        Object.values(daily).map((value, index) => ({x: index, y: value})),
-      );
-      setWeeklyData(
-        Object.values(weekly).map((value, index) => ({x: index, y: value})),
-      );
-      setMonthlyData(
-        Object.values(monthly).map((value, index) => ({x: index, y: value})),
-      );
-      setYearlyData(
-        Object.values(yearly).map((value, index) => ({x: index, y: value})),
-      );
+        const dailyUsageData = datasets[0].data
+          .map((value, index, arr) => {
+            if (index === 0) return 0;
+            return arr[index] - arr[index - 1];
+          })
+          .slice(1);
+        setDailyUsage(dailyUsageData);
+      }
+    } catch (error) {
+      console.error('Error fetching real-time data:', error);
     }
   };
 
-  // Hàm tính toán dữ liệu cho từng nhóm
-  const calculateGroupedData = (groupedData: any) => {
-    const calculatedData: any = {};
-    let prevValue = 0;
-    Object.keys(groupedData).forEach(key => {
-      if (!prevValue) {
-        prevValue = groupedData[key];
-      } else {
-        calculatedData[key] = groupedData[key] - prevValue;
-        prevValue = groupedData[key];
-      }
-    });
-    return calculatedData;
-  };
-
-  const groupDataBy = (rawData: any, groupBy: string) => {
-    const groupedData: any = {};
-    Object.keys(rawData).forEach(timestamp => {
-      const date = new Date(timestamp);
-      let key: string;
-      switch (groupBy) {
-        case 'day':
-          key = date.toISOString().split('T')[0]; // YYYY-MM-DD
-          break;
-        case 'week':
-          key = `${date.getFullYear()}-W${Math.ceil((date.getDate() - 1) / 7)}`; // YYYY-WW
-          break;
-        case 'month':
-          key = `${date.getFullYear()}-${date.getMonth() + 1}`; // YYYY-MM
-          break;
-        case 'year':
-          key = `${date.getFullYear()}`; // YYYY
-          break;
-        default:
-          key = date.toISOString();
-      }
-      if (!groupedData[key]) {
-        groupedData[key] = 0;
-      }
-      groupedData[key] += rawData[timestamp].totalEnergy;
-    });
-    return groupedData;
-  };
-
-  // Lấy dữ liệu từ Firebase và lắng nghe thay đổi
   useEffect(() => {
-    const ref = database().ref('/Energy_use');
-    ref.on('value', handleDataUpdate);
+    fetchRealTimeData();
+  }, []);
 
-    return () => {
-      ref.off();
-    };
+  // Fetch dữ liệu từ Firebase cho dữ liệu hàng tháng
+  const fetchMonthlyData = async () => {
+    try {
+      const snapshot = await database()
+        .ref('/Energy_use')
+        .orderByKey()
+        .once('value');
+      const rawData = snapshot.val();
+      if (rawData) {
+        const sortedData = sortDataByTime(rawData);
+        const labels = Object.keys(sortedData);
+        const energyData = Object.values(sortedData).map(
+          (entry: any) => entry.totalEnergy,
+        );
+        const monthlyUsageData: number[] = [];
+
+        // Tính lượng điện mỗi tháng dựa trên dữ liệu cộng dồn
+        for (
+          let i = labels.length - 1;
+          i >= 0 && monthlyUsageData.length < 12; // Tính đúng 12 tháng
+          i--
+        ) {
+          const currentDate = new Date(labels[i]);
+          const currentMonth = currentDate.getMonth();
+          const currentYear = currentDate.getFullYear();
+
+          // Kiểm tra xem tháng trước đã được tính chưa
+          if (
+            monthlyUsageData.length === 0 ||
+            currentDate.getMonth() !== new Date(labels[i + 1]).getMonth()
+          ) {
+            const startOfMonthIndex = labels.findIndex(label => {
+              const labelDate = new Date(label);
+              return (
+                labelDate.getFullYear() === currentYear &&
+                labelDate.getMonth() === currentMonth
+              );
+            });
+
+            const endOfMonthIndex = i;
+            const startOfMonthEnergy = energyData[startOfMonthIndex];
+            const endOfMonthEnergy = energyData[endOfMonthIndex];
+
+            monthlyUsageData.unshift(endOfMonthEnergy - startOfMonthEnergy); // Thêm vào đầu mảng
+          }
+        }
+
+        setMonthlyUsage(monthlyUsageData);
+      }
+    } catch (error) {
+      console.error('Error fetching monthly data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMonthlyData();
   }, []);
 
   return (
-    <Container isScroll>
-      <View style={{marginHorizontal: 20, flex: 1}}>
-        {/* Hiển thị điện năng cao nhất */}
-        <TextComponent
-          text={`Lượng điện cao nhất hiện tại: ${maxElectricity} kWh`}
-          color="black"
-          styles={[globalStyles.text, {marginBottom: 20, color: 'black'}]}
-        />
-
-        {/* Biểu đồ thời gian thực */}
-        <TextComponent text="Biểu đồ thời gian thực" color="black" />
-        <VictoryChart
-          theme={VictoryTheme.material}
-          width={screenWidth}
-          animate={{
-            duration: 1000,
-            onLoad: {duration: 1000},
+    <View style={{flex: 1}}>
+      <Container isScroll>
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 10,
+            backgroundColor: 'white',
+            borderRadius: 20,
           }}>
-          {/* <VictoryAxis /> */}
-          <VictoryAxis
-            tickFormat={x => {
-              const date = new Date(x);
-              return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`; // Định dạng HH:MM:SS
-            }}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
+          {/* Real-time Chart */}
+          <TextComponent
+            text="Realtime data"
+            size={20}
+            color="white"
+            styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
           />
-          <VictoryAxis
-            dependentAxis
-            tickFormat={t => `${t} kWh`}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
-          />
-          <VictoryLine
-            data={realTimeData}
-            style={{data: {stroke: '#c43a31'}}}
-          />
-        </VictoryChart>
+          <ScrollView horizontal>
+            <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+              <VictoryAxis
+                tickValues={realTimeData.labels}
+                style={{
+                  tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+                }}
+              />
+              <VictoryAxis
+                dependentAxis
+                tickFormat={t => `${t} kWh`}
+                style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+              />
+              <VictoryLine
+                data={realTimeData.datasets[0].data.map((y: any, i: any) => ({
+                  x: realTimeData.labels[i],
+                  y: parseFloat(y.toFixed(2)),
+                }))}
+                style={{data: {stroke: '#c43a31'}}}
+                labels={({datum}) => `${datum.y} kWh`}
+              />
+              <VictoryScatter
+                data={realTimeDataRef.current}
+                size={5}
+                style={{data: {fill: 'coral'}}}
+                labelComponent={<VictoryTooltip />}
+                events={[
+                  {
+                    target: 'data',
+                    eventHandlers: {
+                      onPress: (event, props) => {
+                        const {datum} = props;
+                        Alert.alert(
+                          `Giá trị tích lũy ${datum.x} là: \n ${datum.y.toFixed(
+                            2,
+                          )} kWh`,
+                        );
+                      },
+                    },
+                  },
+                ]}
+              />
+            </VictoryChart>
+          </ScrollView>
 
-        {/* Biểu đồ ngày */}
-        <TextComponent text="Biểu đồ theo ngày" color="black" />
-        <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-          <VictoryAxis
-            tickFormat={x => {
-              const date = new Date(x);
-              return `${date.getDate()}/${
-                date.getMonth() + 1
-              }/${date.getFullYear()}`;
-            }}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
+          {/* Histogram - Daily Usage  */}
+          <SpaceComponent height={14} />
+          <TextComponent
+            text="Lượng điện sử dụng trong 7 ngày trước"
+            color="white"
+            size={20}
+            styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
           />
-          <VictoryAxis
-            dependentAxis
-            tickFormat={t => `${t} kWh`}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
+          <ScrollView horizontal>
+            <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+              <VictoryAxis
+                tickValues={realTimeData.labels.slice(1)}
+                style={{
+                  tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
+                }}
+              />
+              <VictoryAxis
+                dependentAxis
+                tickFormat={t => `${t} kWh`}
+                style={{
+                  tickLabels: {fontSize: 8, textAnchor: 'end'},
+                }}
+              />
+              <VictoryLine
+                data={dailyUsage.map((y, i) => ({
+                  x: realTimeData.labels[i + 1],
+                  y: parseFloat(y.toFixed(2)), // Làm tròn dữ liệu thành 2 chữ số thập phân
+                }))}
+                // style={{data: {fill: 'white'}}}
+              />
+              {/* Thêm Scatter points cho Daily Usage */}
+              <VictoryScatter
+                data={dailyUsage.map((y, i) => ({
+                  x: realTimeData.labels[i + 1],
+                  y: parseFloat(y.toFixed(2)), // Làm tròn 2 chữ số thập phân
+                }))}
+                size={5}
+                style={{data: {fill: 'blue'}}}
+                labels={({datum}) => `${datum.y} kWh`}
+                // labelComponent={<VictoryTooltip />}
+                events={[
+                  {
+                    target: 'data',
+                    eventHandlers: {
+                      onPress: (event, props) => {
+                        const {datum} = props;
+                        Alert.alert(
+                          `Lượng điện ${datum.x} là: \n ${datum.y.toFixed(
+                            2,
+                          )} kWh`,
+                        );
+                      },
+                    },
+                  },
+                ]}
+              />
+            </VictoryChart>
+          </ScrollView>
+          {/* Monthly Usage Chart */}
+          <SpaceComponent height={14} />
+          <TextComponent
+            text="Lượng điện sử dụng hàng tháng"
+            size={20}
+            color="white"
+            styles={[globalStyles.inputContainer, {backgroundColor: 'coral'}]}
           />
-          <VictoryLine data={dailyData} style={{data: {stroke: '#007AFF'}}} />
-        </VictoryChart>
+          <ScrollView horizontal>
+            <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
+              <VictoryAxis
+                tickValues={getLast12Months()} // Sử dụng hàm này để lấy nhãn tháng
+                style={{
+                  tickLabels: {fontSize: 8, angle: -25, textAnchor: 'end'},
+                }}
+              />
 
-        {/* Biểu đồ tuần */}
-        <TextComponent text="Biểu đồ theo tuần" color="black" />
-        <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-          <VictoryAxis
-            tickFormat={x => {
-              const date = new Date(x);
-              return `Tuần ${Math.ceil(
-                date.getDate() / 7,
-              )} ${date.getFullYear()}`; // Định dạng Tuần Năm
-            }}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            tickFormat={t => `${t} kWh`}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
-          />
-          <VictoryLine data={weeklyData} style={{data: {stroke: '#4CAF50'}}} />
-        </VictoryChart>
+              <VictoryAxis
+                dependentAxis
+                tickFormat={t => `${t} kWh`}
+                style={{tickLabels: {fontSize: 8, textAnchor: 'end'}}}
+              />
 
-        {/* Biểu đồ tháng */}
-        <TextComponent text="Biểu đồ theo tháng" color="black" />
-        <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-          <VictoryAxis
-            tickFormat={x => {
-              const date = new Date(x);
-              return `${date.getMonth() + 1}/${date.getFullYear()}`; // Định dạng MM/YYYY
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            tickFormat={t => `${t} kWh`}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
-          />
-          <VictoryLine data={monthlyData} style={{data: {stroke: '#FFA726'}}} />
-        </VictoryChart>
+              <VictoryLine
+                data={monthlyUsage.map((y, i) => ({
+                  x: getLast12Months()[i], // Cập nhật x để lấy nhãn từ getLast12Months
+                  y: parseFloat(y.toFixed(2)),
+                }))}
+                style={{data: {stroke: '#c43a31'}}}
+              />
 
-        {/* Biểu đồ năm */}
-        <TextComponent text="Biểu đồ theo năm" color="black" />
-        <VictoryChart theme={VictoryTheme.material} width={screenWidth}>
-          <VictoryAxis
-            tickFormat={x => {
-              const date = new Date(x);
-              return `${date.getFullYear()}`; // Chỉ hiển thị năm
-            }}
-          />
-          <VictoryAxis
-            dependentAxis
-            tickFormat={t => `${t} kWh`}
-            style={{
-              tickLabels: {fontSize: 9}, // Chỉnh kích thước chữ ở đây
-            }}
-          />
-          <VictoryLine data={yearlyData} style={{data: {stroke: '#673AB7'}}} />
-        </VictoryChart>
-      </View>
-    </Container>
+              <VictoryScatter
+                data={monthlyUsage.map((y, i) => ({
+                  x: getLast12Months()[i], // Cập nhật x để lấy nhãn từ getLast12Months
+                  y: parseFloat(y.toFixed(2)),
+                }))}
+                size={5}
+                style={{data: {fill: 'orange'}}}
+                labels={({datum}) => `${datum.y} kWh`}
+                events={[
+                  {
+                    target: 'data',
+                    eventHandlers: {
+                      onPress: (event, props) => {
+                        const {datum} = props;
+                        Alert.alert(
+                          `Lượng điện ${datum.x} là: \n \t ${datum.y.toFixed(
+                            2,
+                          )} kWh`,
+                        );
+                      },
+                    },
+                  },
+                ]}
+              />
+            </VictoryChart>
+          </ScrollView>
+        </View>
+      </Container>
+    </View>
   );
 };
 
-export default RealTimeChartScreen;
+export default ChartScreen;

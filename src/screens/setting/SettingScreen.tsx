@@ -49,7 +49,7 @@ const SettingScreen = () => {
             },
           ]}
           color="black"
-          text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng lỏ này của tụi mình 😂🙂"
+          text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng. 😂🙂"
           size={20}
         />
       </Container>

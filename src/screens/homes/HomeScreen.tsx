@@ -1,4 +1,3 @@
-import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import {Calendar, Clock} from 'iconsax-react-native';
 import moment from 'moment';
@@ -15,9 +14,9 @@ import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
 
 const HomeScreen = ({navigation}: any) => {
-  const handleSingout = async () => {
-    await auth().signOut();
-  };
+  // const handleSingout = async () => {
+  //   await auth().signOut();
+  // };
 
   const screenWidth = Dimensions.get('window').width;
   const timeRef = useRef(moment().format('HH:mm:ss'));
@@ -26,32 +25,9 @@ const HomeScreen = ({navigation}: any) => {
   const [time, setTime] = useState(timeRef.current);
   const [date, setDate] = useState(dateRef.current);
 
-  const [message, setMessage] = useState('');
-  const [triggerSend, setTriggerSend] = useState(false); // trigger to detect button press
-  // code push message
-  useEffect(() => {
-    if (triggerSend) {
-      const ref = database().ref('Test1');
-      ref
-        .push()
-        .set({
-          date: new Date().toLocaleString(), // sử dụng thời gian hiện tại
-          message: message,
-        })
-        .then(() => console.log('Data pushed to Firebase'))
-        .catch(error => console.log('Error:', error));
-
-      // Reset trigger
-      setTriggerSend(false);
-    }
-  }, [triggerSend, message]);
-
-  const handlePress = () => {
-    setTriggerSend(true);
-  };
-
   const hlkRadarValueRef = useRef(0);
   const [hlkRadarValue, setHlkRadarValue] = useState(false);
+
   //useEff của hlk radar
   useEffect(() => {
     const databaseHLKRef = database().ref('HLK_RADAR/status');
@@ -213,15 +189,6 @@ const HomeScreen = ({navigation}: any) => {
 
   return (
     <View style={{flex: 1}}>
-      {/* <View>
-        <Text>Enter a message:</Text>
-        <TextInput
-          value={message}
-          onChangeText={text => setMessage(text)}
-          placeholder="Enter a message"
-        />
-        <Button title="Send" onPress={handlePress} />
-      </View> */}
       <Container isScroll>
         <SectionComponent>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -248,7 +215,6 @@ const HomeScreen = ({navigation}: any) => {
               <View
                 style={{
                   flex: 1,
-                  // justifyContent: 'center',
                   alignItems: 'flex-start',
                   // padding: 2,
                   paddingVertical: 10,
@@ -674,7 +640,9 @@ const HomeScreen = ({navigation}: any) => {
             />
           </View>
         </SectionComponent> */}
-        <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
+
+        {/* Lượng điện tiêu thụ */}
+        {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
             style={[
               globalStyles.inputContainer,
@@ -703,7 +671,8 @@ const HomeScreen = ({navigation}: any) => {
               text="Lượng điện tiêu thụ hàng tháng: 210 kWh"
             />
           </View>
-        </SectionComponent>
+        </SectionComponent> */}
+
         {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <View
             style={[
