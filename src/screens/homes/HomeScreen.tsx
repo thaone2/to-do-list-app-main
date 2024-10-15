@@ -20,13 +20,29 @@ const HomeScreen = ({navigation}: any) => {
 
   const screenWidth = Dimensions.get('window').width;
   const timeRef = useRef(moment().format('HH:mm:ss'));
-  const dateRef = useRef(moment().format('dddd, DD-MM-YYYY')); // Hiển thị thứ
+  const dateRef = useRef(moment().format('dddd, DD-MM-YYYY'));
 
   const [time, setTime] = useState(timeRef.current);
   const [date, setDate] = useState(dateRef.current);
 
   const hlkRadarValueRef = useRef(0);
   const [hlkRadarValue, setHlkRadarValue] = useState(false);
+
+  const computer1Temp = useRef(0);
+  const computer2Temp = useRef(0);
+  const computer3Temp = useRef(0);
+  const computer4Temp = useRef(0);
+
+  const [computerStatuses, setComputerStatuses] = useState({
+    computer1: 0,
+    computer2: 0,
+    computer3: 0,
+    computer4: 0,
+  });
+
+  const [isAuto, setIsAuto] = useState(0);
+
+  const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
 
   //useEff của hlk radar
   useEffect(() => {
@@ -37,65 +53,41 @@ const HomeScreen = ({navigation}: any) => {
       hlkRadarValueRef.current = status;
       setHlkRadarValue(prev => !prev); // Trigger một lần re-render khi giá trị thay đổi
     });
-
+    //cleanup function
     return () => {
-      databaseHLKRef.off('value', listener); // Dọn dẹp listener khi component bị unmount
+      databaseHLKRef.off('value', listener);
     };
   }, []);
 
-  const computer1Temp = useRef(0);
-  const computer2Temp = useRef(0);
-  const computer3Temp = useRef(0);
-  const computer4Temp = useRef(0);
-
-  // const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
-
+  //useEffect nhiệt độ
   useEffect(() => {
-    const fetchLastTemperatureData = async () => {
-      const temperatureRef = database().ref('Temperatures');
-      const snapshot = await temperatureRef
-        .orderByKey()
-        .limitToLast(1)
-        .once('value');
-      const data = snapshot.val();
+    const temperatureRef = database().ref('Temperatures');
 
-      if (data) {
-        const lastKey = Object.keys(data)[0]; // Lấy thời gian cập nhật cuối cùng
-        setLastUpdateTime(lastKey);
-
-        const latestData = data[lastKey];
-        if (latestData) {
-          computer1Temp.current = latestData.computer1.temperature || 0;
-          computer2Temp.current = latestData.computer2.temperature || 0;
-          computer3Temp.current = latestData.computer3.temperature || 0;
-          computer4Temp.current = latestData.computer4.temperature || 0;
+    const onTemperatureChange = temperatureRef
+      .orderByKey()
+      .limitToLast(1)
+      .on('value', snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          const lastKey = Object.keys(data)[0];
+          setLastUpdateTime(lastKey);
+          const latestData = data[lastKey];
+          if (latestData) {
+            computer1Temp.current = latestData.computer1.temperature || 0;
+            computer2Temp.current = latestData.computer2.temperature || 0;
+            computer3Temp.current = latestData.computer3.temperature || 0;
+            computer4Temp.current = latestData.computer4.temperature || 0;
+          }
         }
-      }
-    };
+      });
 
-    fetchLastTemperatureData();
+    // Cleanup listener when the component unmounts
+    return () => {
+      temperatureRef.off('value', onTemperatureChange);
+    };
   }, []);
 
-  //useEffect cập nhật lại dữ liệu cuối củng của computer
-  const latestRef = database().ref('Computer');
-  useEffect(() => {
-    const fetchLastUpdateTime = async () => {
-      // const latestRef = database().ref('Computer'); // Đường dẫn tới dữ liệu máy tính
-      const snapshot = await latestRef
-        .orderByKey()
-        .limitToLast(1)
-        .once('value');
-      const data = snapshot.val();
-
-      if (data) {
-        const lastKey = Object.keys(data)[0];
-        setLastUpdateTime(lastKey);
-      }
-    };
-
-    fetchLastUpdateTime();
-  }, [latestRef]);
-
+  // useEffect Ngay thang
   useEffect(() => {
     const interval = setInterval(() => {
       const currentTime = moment().format('HH:mm:ss');
@@ -113,35 +105,47 @@ const HomeScreen = ({navigation}: any) => {
     };
   }, []);
 
-  const [computerStatuses, setComputerStatuses] = useState({
-    autoManual: 0,
-    computer1: 0,
-    computer2: 0,
-    computer3: 0,
-    computer4: 0,
-  });
-  const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
+  //useEffect cập nhật lại dữ liệu cuối củng của computer
+  const latestRef = database().ref('Computer');
+  useEffect(() => {
+    const fetchLastUpdateTime = async () => {
+      const snapshot = await latestRef
+        .orderByKey()
+        .limitToLast(1)
+        .once('value');
+      const data = snapshot.val();
 
-  const getCurrentDateTime = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
+      if (data) {
+        const lastKey = Object.keys(data)[0];
+        setLastUpdateTime(lastKey);
+      }
+    };
 
+    fetchLastUpdateTime();
+  }, [latestRef]);
+
+  // Fetch `isAuto` status from `/isAuto/status`
+  useEffect(() => {
+    const isAutoRef = database().ref('isAuto/status');
+    const listener = isAutoRef.on('value', snapshot => {
+      const status = snapshot.val();
+      setIsAuto(status);
+    });
+
+    return () => {
+      isAutoRef.off('value', listener);
+    };
+  }, []);
+
+  // Fetch computer statuses from `/Computer/{time_key}`
   useEffect(() => {
     if (!lastUpdateTime) return;
 
-    const databaseRef = database().ref(`Computer/${lastUpdateTime}`);
-    const listener = databaseRef.on('value', snapshot => {
+    const computerRef = database().ref(`Computer/${lastUpdateTime}`);
+    const listener = computerRef.on('value', snapshot => {
       const data = snapshot.val();
       if (data) {
         setComputerStatuses({
-          autoManual: data.autoManual?.status || 0,
           computer1: data.computer1?.status || 0,
           computer2: data.computer2?.status || 0,
           computer3: data.computer3?.status || 0,
@@ -151,22 +155,35 @@ const HomeScreen = ({navigation}: any) => {
     });
 
     return () => {
-      databaseRef.off('value', listener);
+      computerRef.off('value', listener);
     };
   }, [lastUpdateTime]);
 
+  // Handle switch change for auto/manual (isAuto)
+  const handleAutoManualChange = (newValue: any) => {
+    const newStatus = newValue ? 1 : 0;
+    setIsAuto(newStatus);
+    // Update `isAuto/status` in Firebase
+    database()
+      .ref('isAuto/status')
+      .set(newStatus)
+      .then(() => console.log('Auto/Manual status updated'))
+      .catch(error =>
+        console.error('Failed to update auto/manual status:', error),
+      );
+  };
+  // Handle switch change for computers
   const handleSwitchChange = (computerId: any, newValue: any) => {
     const newStatus = {
       ...computerStatuses,
       [computerId]: newValue ? 1 : 0,
     };
-
     setComputerStatuses(newStatus);
 
-    const currentTimeKey = getCurrentDateTime();
+    const currentTimeKey = moment().format('YYYY-MM-DD HH:mm:ss');
 
+    // Update computer status in `/Computer/{currentTimeKey}`
     const firebaseStatus = {
-      autoManual: {status: newStatus.autoManual},
       computer1: {status: newStatus.computer1},
       computer2: {status: newStatus.computer2},
       computer3: {status: newStatus.computer3},
@@ -176,15 +193,10 @@ const HomeScreen = ({navigation}: any) => {
     database()
       .ref(`Computer/${currentTimeKey}`)
       .set(firebaseStatus)
-      .then(() => {
-        setLastUpdateTime(currentTimeKey);
-        console.log(
-          `Status of ${computerId} updated successfully at ${currentTimeKey}.`,
-        );
-      })
-      .catch((error: any) => {
-        console.error(`Failed to update ${computerId} status:`, error);
-      });
+      .then(() => setLastUpdateTime(currentTimeKey))
+      .catch(error =>
+        console.error(`Failed to update ${computerId} status:`, error),
+      );
   };
 
   return (
@@ -340,8 +352,10 @@ const HomeScreen = ({navigation}: any) => {
               <SwitchComponent
                 showConfirmationDialog={true}
                 styles={{paddingVertical: 8}}
-                value={computerStatuses.autoManual === 1}
-                onValueChange={value => handleSwitchChange('autoManual', value)}
+                // value={computerStatuses.autoManual === 1}
+                value={isAuto === 1}
+                // onValueChange={value => handleSwitchChange('autoManual', value)}
+                onValueChange={handleAutoManualChange}
               />
             </View>
           </ComputerImageComponent>
@@ -355,7 +369,8 @@ const HomeScreen = ({navigation}: any) => {
             alignItems: 'center',
           }}>
           <ComputerImageComponent
-            disable={computerStatuses.autoManual === 1}
+            // disable={computerStatuses.autoManual === 1}
+            disable={isAuto === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -398,12 +413,14 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer1 === 1}
                 onValueChange={value => handleSwitchChange('computer1', value)}
-                disabled={computerStatuses.autoManual === 1}
+                // disabled={computerStatuses.autoManual === 1}
+                disabled={isAuto === 1}
               />
             </View>
           </ComputerImageComponent>
           <ComputerImageComponent
-            disable={computerStatuses.autoManual === 1}
+            // disable={computerStatuses.autoManual === 1}
+            disable={isAuto === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -446,7 +463,8 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer2 === 1}
                 onValueChange={value => handleSwitchChange('computer2', value)}
-                disabled={computerStatuses.autoManual === 1}
+                // disabled={computerStatuses.autoManual === 1}
+                disabled={isAuto === 1}
               />
             </View>
           </ComputerImageComponent>
@@ -460,7 +478,8 @@ const HomeScreen = ({navigation}: any) => {
             alignItems: 'center',
           }}>
           <ComputerImageComponent
-            disable={computerStatuses.autoManual === 1}
+            // disable={computerStatuses.autoManual === 1}
+            disable={isAuto === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -503,12 +522,14 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer3 === 1}
                 onValueChange={value => handleSwitchChange('computer3', value)}
-                disabled={computerStatuses.autoManual === 1}
+                // disabled={computerStatuses.autoManual === 1}
+                disabled={isAuto === 1}
               />
             </View>
           </ComputerImageComponent>
           <ComputerImageComponent
-            disable={computerStatuses.autoManual === 1}
+            // disable={computerStatuses.autoManual === 1}
+            disable={isAuto === 1}
             styles={{
               borderRadius: 12,
               paddingHorizontal: Platform.OS === 'ios' ? 12 : 10,
@@ -551,7 +572,8 @@ const HomeScreen = ({navigation}: any) => {
                 styles={{paddingVertical: 8}}
                 value={computerStatuses.computer4 === 1}
                 onValueChange={value => handleSwitchChange('computer4', value)}
-                disabled={computerStatuses.autoManual === 1}
+                // disabled={computerStatuses.autoManual === 1}
+                disabled={isAuto === 1}
               />
             </View>
           </ComputerImageComponent>
