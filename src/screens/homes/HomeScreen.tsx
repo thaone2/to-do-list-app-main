@@ -4,6 +4,7 @@ import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, ImageBackground, Platform, View} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
@@ -12,12 +13,9 @@ import SectionComponent from '../../components/SectionComponent';
 import SwitchComponent from '../../components/SwitchComponent';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
+import ComputerStatusCardProps from '../../components/ComputerStatusCardProps';
 
 const HomeScreen = ({navigation}: any) => {
-  // const handleSingout = async () => {
-  //   await auth().signOut();
-  // };
-
   const screenWidth = Dimensions.get('window').width;
   const timeRef = useRef(moment().format('HH:mm:ss'));
   const dateRef = useRef(moment().format('dddd, DD-MM-YYYY'));
@@ -141,7 +139,9 @@ const HomeScreen = ({navigation}: any) => {
   useEffect(() => {
     if (!lastUpdateTime) return;
 
-    const computerRef = database().ref(`Computer/${lastUpdateTime}`);
+    // const computerRef = database().ref(`Computer/${lastUpdateTime}`);
+    const computerRef = database().ref(`Computer`);
+
     const listener = computerRef.on('value', snapshot => {
       const data = snapshot.val();
       if (data) {
@@ -190,8 +190,16 @@ const HomeScreen = ({navigation}: any) => {
       computer4: {status: newStatus.computer4},
     };
 
+    // database()
+    //   .ref(`Computer/${currentTimeKey}`)
+    //   .set(firebaseStatus)
+    //   .then(() => setLastUpdateTime(currentTimeKey))
+    //   .catch(error =>
+    //     console.error(`Failed to update ${computerId} status:`, error),
+    //   );
+
     database()
-      .ref(`Computer/${currentTimeKey}`)
+      .ref(`Computer`)
       .set(firebaseStatus)
       .then(() => setLastUpdateTime(currentTimeKey))
       .catch(error =>
@@ -368,7 +376,15 @@ const HomeScreen = ({navigation}: any) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <ComputerImageComponent
+          <ComputerStatusCardProps
+            isAuto={isAuto === 1}
+            computerName="Computer 1"
+            temperature={computer1Temp.current}
+            switchValue={computerStatuses.computer1 === 1}
+            onSwitchChange={value => handleSwitchChange('computer1', value)}
+          />
+
+          {/* <ComputerImageComponent
             // disable={computerStatuses.autoManual === 1}
             disable={isAuto === 1}
             styles={{
@@ -395,6 +411,7 @@ const HomeScreen = ({navigation}: any) => {
                 size={16}
                 text="Computer 1"
               />
+
               <TextComponent
                 styles={{
                   fontWeight: 'bold',
@@ -408,6 +425,7 @@ const HomeScreen = ({navigation}: any) => {
                 size={13}
                 text={`Temp:  ${computer1Temp.current} ℃`}
               />
+
               <SwitchComponent
                 showConfirmationDialog={true}
                 styles={{paddingVertical: 8}}
@@ -417,7 +435,8 @@ const HomeScreen = ({navigation}: any) => {
                 disabled={isAuto === 1}
               />
             </View>
-          </ComputerImageComponent>
+          </ComputerImageComponent> */}
+          {/* 
           <ComputerImageComponent
             // disable={computerStatuses.autoManual === 1}
             disable={isAuto === 1}
@@ -467,7 +486,15 @@ const HomeScreen = ({navigation}: any) => {
                 disabled={isAuto === 1}
               />
             </View>
-          </ComputerImageComponent>
+          </ComputerImageComponent> */}
+
+          <ComputerStatusCardProps
+            isAuto={isAuto === 1}
+            computerName="Computer 2"
+            temperature={computer2Temp.current}
+            switchValue={computerStatuses.computer2 === 1}
+            onSwitchChange={value => handleSwitchChange('computer2', value)}
+          />
         </SectionComponent>
         <SectionComponent
           styles={{
@@ -477,7 +504,7 @@ const HomeScreen = ({navigation}: any) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <ComputerImageComponent
+          {/* <ComputerImageComponent
             // disable={computerStatuses.autoManual === 1}
             disable={isAuto === 1}
             styles={{
@@ -526,8 +553,22 @@ const HomeScreen = ({navigation}: any) => {
                 disabled={isAuto === 1}
               />
             </View>
-          </ComputerImageComponent>
-          <ComputerImageComponent
+          </ComputerImageComponent> */}
+          <ComputerStatusCardProps
+            isAuto={isAuto === 1}
+            computerName="Computer 3"
+            temperature={computer3Temp.current}
+            switchValue={computerStatuses.computer3 === 1}
+            onSwitchChange={value => handleSwitchChange('computer3', value)}
+          />
+          <ComputerStatusCardProps
+            isAuto={isAuto === 1}
+            computerName="Computer 4"
+            temperature={computer4Temp.current}
+            switchValue={computerStatuses.computer4 === 1}
+            onSwitchChange={value => handleSwitchChange('computer4', value)}
+          />
+          {/* <ComputerImageComponent
             // disable={computerStatuses.autoManual === 1}
             disable={isAuto === 1}
             styles={{
@@ -576,7 +617,7 @@ const HomeScreen = ({navigation}: any) => {
                 disabled={isAuto === 1}
               />
             </View>
-          </ComputerImageComponent>
+          </ComputerImageComponent> */}
         </SectionComponent>
 
         {/* <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>

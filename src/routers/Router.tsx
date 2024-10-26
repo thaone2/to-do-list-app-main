@@ -296,7 +296,7 @@ const Router = () => {
               fontSize: 28,
             },
             tabBarActiveTintColor: 'green',
-            title: 'Lab PC management',
+            title: 'Lab PC Management',
           }}
         />
         <Tab.Screen
@@ -311,7 +311,7 @@ const Router = () => {
               fontSize: 28,
             },
             tabBarActiveTintColor: 'coral',
-            title: 'Chart',
+            title: 'Biểu đồ lượng điện sử dụng',
           }}
         />
         <Tab.Screen
@@ -326,6 +326,7 @@ const Router = () => {
               fontSize: 28,
             },
             tabBarActiveTintColor: 'orange',
+            title: 'Thông báo',
           }}
         />
         <Tab.Screen

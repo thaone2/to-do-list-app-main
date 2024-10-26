@@ -22,6 +22,19 @@ const SettingScreen = () => {
   return (
     <View style={{flex: 1}}>
       <Container isScroll>
+        <TextComponent
+          styles={[
+            globalStyles.inputContainer,
+            {
+              backgroundColor: '#DEDEDF',
+              marginHorizontal: 20,
+              // marginVertical: 20,
+            },
+          ]}
+          color="black"
+          text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng. 😂🙂"
+          size={20}
+        />
         <TouchableOpacity onPress={handleDangXuat}>
           <RowComponent
             styles={[
@@ -39,19 +52,6 @@ const SettingScreen = () => {
             <Logout size={34} color="black" />
           </RowComponent>
         </TouchableOpacity>
-        <TextComponent
-          styles={[
-            globalStyles.inputContainer,
-            {
-              backgroundColor: '#DEDEDF',
-              marginHorizontal: 20,
-              // marginVertical: 20,
-            },
-          ]}
-          color="black"
-          text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng. 😂🙂"
-          size={20}
-        />
       </Container>
     </View>
   );
