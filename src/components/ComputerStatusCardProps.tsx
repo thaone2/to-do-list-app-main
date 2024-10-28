@@ -31,14 +31,12 @@ const ComputerStatusCardProps = (props: Props) => {
           size={16}
           text={computerName}
         />
-
         <TextComponent
           styles={styles.temperatureText}
           color="#F8C266"
           size={13}
           text={`Temp: ${temperature} ℃`}
         />
-
         <SwitchComponent
           showConfirmationDialog={true}
           styles={styles.switch}
