@@ -35,7 +35,12 @@ const ComputerStatusCardProps = (props: Props) => {
           styles={styles.temperatureText}
           color="#F8C266"
           size={13}
-          text={`Temp: ${temperature} ℃`}
+          // text={`Temp: ${temperature} ℃`}
+          text={
+            temperature === -127
+              ? 'No reading data'
+              : `Temp: ${temperature.toFixed(1)} ℃`
+          }
         />
         <SwitchComponent
           showConfirmationDialog={true}

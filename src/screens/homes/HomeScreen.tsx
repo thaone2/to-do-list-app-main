@@ -58,28 +58,48 @@ const HomeScreen = ({navigation}: any) => {
   }, []);
 
   //useEffect nhiệt độ
+  // useEffect(() => {
+  //   const temperatureRef = database().ref('Temperatures');
+
+  //   const onTemperatureChange = temperatureRef
+  //     .orderByKey()
+  //     .limitToLast(1)
+  //     .on('value', snapshot => {
+  //       const data = snapshot.val();
+  //       if (data) {
+  //         const lastKey = Object.keys(data)[0];
+  //         setLastUpdateTime(lastKey);
+  //         const latestData = data[lastKey];
+  //         if (latestData) {
+  //           computer1Temp.current = latestData.computer1.temperature || 0;
+  //           computer2Temp.current = latestData.computer2.temperature || 0;
+  //           computer3Temp.current = latestData.computer3.temperature || 0;
+  //           computer4Temp.current = latestData.computer4.temperature || 0;
+  //         }
+  //       }
+  //     });
+
+  //   // Cleanup listener when the component unmounts
+  //   return () => {
+  //     temperatureRef.off('value', onTemperatureChange);
+  //   };
+  // }, []);
+  //useEffect nhiệt độ
   useEffect(() => {
     const temperatureRef = database().ref('Temperatures');
 
-    const onTemperatureChange = temperatureRef
-      .orderByKey()
-      .limitToLast(1)
-      .on('value', snapshot => {
-        const data = snapshot.val();
-        if (data) {
-          const lastKey = Object.keys(data)[0];
-          setLastUpdateTime(lastKey);
-          const latestData = data[lastKey];
-          if (latestData) {
-            computer1Temp.current = latestData.computer1.temperature || 0;
-            computer2Temp.current = latestData.computer2.temperature || 0;
-            computer3Temp.current = latestData.computer3.temperature || 0;
-            computer4Temp.current = latestData.computer4.temperature || 0;
-          }
-        }
-      });
+    const onTemperatureChange = temperatureRef.on('value', snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        setLastUpdateTime(new Date().toLocaleString()); // Cập nhật thời gian lấy dữ liệu
+        computer1Temp.current = data.computer1.temperature || 0;
+        computer2Temp.current = data.computer2.temperature || 0;
+        computer3Temp.current = data.computer3.temperature || 0;
+        computer4Temp.current = data.computer4.temperature || 0;
+      }
+    });
 
-    // Cleanup listener when the component unmounts
+    // Cleanup listener khi component bị unmount
     return () => {
       temperatureRef.off('value', onTemperatureChange);
     };
