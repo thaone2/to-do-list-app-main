@@ -3,7 +3,7 @@
     "project_number": "195765369482",
     "firebase_url": "https://todolistapp-408f2-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "todolistapp-408f2",
-    "storage_bucket": "todolistapp-408f2.appspot.com"
+    "storage_bucket": "todolistapp-408f2.firebasestorage.app"
   },
   "client": [
     {
