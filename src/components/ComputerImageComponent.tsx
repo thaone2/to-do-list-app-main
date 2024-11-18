@@ -4,6 +4,7 @@ import {
   StyleProp,
   ViewStyle,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import React, {ReactNode} from 'react';
 import {globalStyles} from '../styles/globalStyles';
@@ -14,6 +15,8 @@ interface Props {
   styles?: StyleProp<ViewStyle>;
   disable?: boolean;
 }
+
+const screenWidth = Dimensions.get('window').width;
 
 const ComputerImageComponent = (props: Props) => {
   const {children, color, styles, disable} = props;
@@ -35,7 +38,7 @@ const ComputerImageComponent = (props: Props) => {
           borderRadius: 12,
           flex: 1,
           paddingVertical: 10,
-          paddingHorizontal: 22,
+          paddingHorizontal: screenWidth / 22,
         }}>
         {/* Nếu disable, thêm lớp TouchableWithoutFeedback */}
         {disable ? (
