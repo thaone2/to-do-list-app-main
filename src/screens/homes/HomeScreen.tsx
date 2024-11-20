@@ -4,18 +4,15 @@ import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, ImageBackground, Platform, View} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
+import ComputerStatusCardProps from '../../components/ComputerStatusCardProps';
 import Container from '../../components/Container';
 import SectionComponent from '../../components/SectionComponent';
 import SwitchComponent from '../../components/SwitchComponent';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
-import ComputerStatusCardProps from '../../components/ComputerStatusCardProps';
-import {Style} from 'victory-native';
-import {green} from 'react-native-redash';
 
 const HomeScreen = ({navigation}: any) => {
   const screenWidth = Dimensions.get('window').width;

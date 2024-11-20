@@ -148,133 +148,22 @@
 
 // export default ChartScreen;
 
-import React, {useEffect, useState, useMemo, useRef, useCallback} from 'react';
-import {Dimensions, ScrollView, View} from 'react-native';
-import {
-  VictoryAxis,
-  VictoryBar,
-  VictoryChart,
-  VictoryTheme,
-  VictoryTooltip,
-} from 'victory-native';
-import database from '@react-native-firebase/database';
-import TextComponent from '../../components/TextComponent';
-import {colors} from '../../constants/colors';
+import React from 'react';
+import {ScrollView, View} from 'react-native';
 import EnergyConsumption from './EnergyConsumption';
-
-const screenWidth = Dimensions.get('window').width;
+import EnergyRealtime from './EnergyRealtime';
+import EnergyTotalMonth from './EnergyTotalMonth';
 
 const ChartScreen: React.FC = () => {
-  const [rawData, setRawData] = useState<any>({});
-  const realTimeRef = useRef({labels: [], datasets: [{data: []}]});
-  const sevenDaysRef = useRef({labels: [], datasets: [{data: []}]});
-
-  // Hàm parse ngày giờ từ chuỗi (memoized)
-  const parseDate = useCallback((dateString: string) => {
-    return new Date(dateString.replace('_', ' '));
-  }, []);
-
-  // Sắp xếp dữ liệu theo thời gian (memoized)
-  const sortDataByTime = useCallback(
-    (data: any) =>
-      Object.keys(data)
-        .sort((a, b) => parseDate(a).getTime() - parseDate(b).getTime())
-        .reduce((sorted: any, key: string) => {
-          sorted[key] = data[key];
-          return sorted;
-        }, {}),
-    [parseDate],
-  );
-
-  // Tính toán dữ liệu biểu đồ (memoized)
-  const realTimeData = useMemo(() => {
-    if (!rawData) return {labels: [], datasets: [{data: []}]};
-    const sortedData = sortDataByTime(rawData);
-    const labels = Object.keys(sortedData);
-    const datasets = [
-      {data: Object.values(sortedData).map((entry: any) => entry.totalEnergy)},
-    ];
-    return {labels, datasets};
-  }, [rawData, sortDataByTime]);
-
-  const dailyUsage = useMemo(() => {
-    return realTimeData.datasets[0].data
-      .map((value, index, arr) =>
-        index === 0 ? 0 : arr[index] - arr[index - 1],
-      )
-      .slice(1);
-  }, [realTimeData]);
-
-  // Lấy dữ liệu từ Firebase
-  const fetchRealTimeData = useCallback(() => {
-    const ref = database().ref('/Energy_use').orderByKey().limitToLast(4);
-
-    const onDataChange = (snapshot: any) => {
-      setRawData(snapshot.val());
-    };
-
-    ref.on('value', onDataChange);
-    return () => ref.off('value', onDataChange);
-  }, []);
-
-  useEffect(() => {
-    fetchRealTimeData();
-  }, [fetchRealTimeData]);
-
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, marginHorizontal: 8}}>
       <ScrollView>
         {/* Biểu đồ thời gian thực */}
-        <View
-          style={{
-            margin: 10,
-            backgroundColor: colors.white,
-            borderRadius: 10,
-            paddingBottom: 20,
-          }}>
-          <TextComponent
-            text="Lượng điện tích lũy thời gian thực"
-            color="black"
-            size={18}
-            styles={{paddingTop: 10, marginBottom: -40}}
-          />
-          <VictoryChart
-            theme={VictoryTheme.material}
-            width={screenWidth}
-            animate={{
-              duration: 700,
-              onLoad: {duration: 700},
-              easing: 'linear',
-            }}
-            domain={{x: [0.5, realTimeData.labels.length + 0.5]}}>
-            <VictoryAxis
-              tickValues={realTimeData.labels.map((_: any, i: number) => i + 1)}
-              tickFormat={t => realTimeData.labels[t - 1]}
-              style={{
-                tickLabels: {fontSize: 7, angle: -25, textAnchor: 'end'},
-              }}
-            />
-            <VictoryAxis
-              dependentAxis
-              tickFormat={t => `${t} kWh`}
-              style={{
-                tickLabels: {fontSize: 8, textAnchor: 'end'},
-              }}
-            />
-            <VictoryBar
-              data={realTimeData.datasets[0].data.map((y: any, i: any) => ({
-                x: i + 1,
-                y: parseFloat(y.toFixed(2)),
-              }))}
-              style={{data: {fill: '#4caf50'}}}
-              labels={({datum}) => `${datum.y} kWh`}
-              labelComponent={<VictoryTooltip />}
-            />
-          </VictoryChart>
-        </View>
-        <View>
-          <EnergyConsumption />
-        </View>
+        <EnergyRealtime />
+        {/* Biểu đồ 7 ngày */}
+        <EnergyConsumption />
+        {/* biểu đồ 6 tháng */}
+        <EnergyTotalMonth />
       </ScrollView>
     </View>
   );
