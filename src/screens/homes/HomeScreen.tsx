@@ -296,7 +296,6 @@ const HomeScreen = ({navigation}: any) => {
                 style={{
                   flex: 1,
                   alignItems: 'flex-start',
-                  // padding: 2,
                   paddingVertical: 10,
                   marginHorizontal: 6,
                   width: 65,
@@ -560,7 +559,6 @@ const HomeScreen = ({navigation}: any) => {
           styles={{
             flex: 1,
             flexDirection: 'row',
-            // width: screenWidth - 40,
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>

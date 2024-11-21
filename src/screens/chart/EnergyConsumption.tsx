@@ -568,15 +568,7 @@
 
 import database from '@react-native-firebase/database';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  Alert,
-  Dimensions,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Dimensions, FlatList, ScrollView, StyleSheet, View} from 'react-native';
 import {
   VictoryAxis,
   VictoryBar,
@@ -655,7 +647,15 @@ const EnergyConsumptionChart = () => {
   const {labels, datasets} = chartDataRef.current;
 
   return (
-    <View style={styles.chartContainer}>
+    <View
+      style={{
+        margin: 10,
+        backgroundColor: '#fff',
+        paddingBottom: 20,
+        paddingTop: 10,
+        paddingHorizontal: 10,
+        borderRadius: 12,
+      }}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <TextComponent
           text="Lượng điện tiêu thụ 7 ngày gần đây"
@@ -664,7 +664,6 @@ const EnergyConsumptionChart = () => {
           styles={{
             paddingTop: 10,
             marginBottom: -40,
-            // fontWeight: 'bold',
             textTransform: 'uppercase',
           }}
         />
@@ -731,7 +730,6 @@ const EnergyConsumptionChart = () => {
                 }}>
                 <TextComponent
                   styles={{
-                    // marginRight: 14,
                     borderColor: '#ccc',
                     borderRightWidth: 1,
                     paddingRight: 10,
@@ -752,16 +750,5 @@ const EnergyConsumptionChart = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  chartContainer: {
-    margin: 10,
-    backgroundColor: '#fff',
-    paddingBottom: 20,
-    paddingTop: 10,
-    paddingHorizontal: 10,
-    borderRadius: 12,
-  },
-});
 
 export default EnergyConsumptionChart;

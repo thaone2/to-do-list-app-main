@@ -1664,10 +1664,9 @@ import {
   VictoryTooltip,
 } from 'victory-native';
 import TextComponent from '../../components/TextComponent';
-import {globalStyles} from '../../styles/globalStyles';
 
 const EnergyTotalMonth = () => {
-  const [numMonths] = useState(6); // Mặc định hiển thị 6 tháng
+  const [numMonths] = useState(6);
   const [chartData, setChartData] = useState<{
     labels: string[];
     data: number[];
@@ -1680,11 +1679,9 @@ const EnergyTotalMonth = () => {
     const listener = ref.on('value', snapshot => {
       try {
         const rawData = snapshot.val();
-
         if (!rawData) {
           throw new Error('Dữ liệu từ Firebase trống hoặc không hợp lệ.');
         }
-
         const energyData = Object.entries(rawData).map(([key, value]: any) => ({
           date: key.replace('_', ' '),
           totalEnergy: parseFloat(value.totalEnergy || 0),
@@ -1732,7 +1729,6 @@ const EnergyTotalMonth = () => {
         }
 
         const reversedMonthsData = monthsData.reverse();
-
         const labels = reversedMonthsData.map(item => item.date);
         const data = reversedMonthsData.map(item => item.consumption);
 
@@ -1741,6 +1737,8 @@ const EnergyTotalMonth = () => {
           data,
           rawData: reversedMonthsData,
         });
+
+        console.log(chartData);
       } catch (err) {
         console.error('Error fetching data:', err);
       }
@@ -1755,7 +1753,15 @@ const EnergyTotalMonth = () => {
   }, [numMonths]);
 
   return (
-    <View style={styles.chartContainer}>
+    <View
+      style={{
+        margin: 10,
+        backgroundColor: '#fff',
+        paddingBottom: 20,
+        flex: 1,
+        paddingHorizontal: 10,
+        borderRadius: 12,
+      }}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <TextComponent
           text={`Lượng điện tiêu thụ ${numMonths} tháng gần đây`}
@@ -1817,7 +1823,6 @@ const EnergyTotalMonth = () => {
             data={chartData.rawData}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => (
-              //
               <View
                 style={{
                   flexDirection: 'row',
@@ -1831,7 +1836,6 @@ const EnergyTotalMonth = () => {
                 <TextComponent
                   styles={{
                     borderColor: '#ccc',
-                    // marginRight: 7,
                   }}
                   text={`Tháng ${item.date}`}
                   color="black"
@@ -1852,15 +1856,7 @@ const EnergyTotalMonth = () => {
 };
 
 const styles = StyleSheet.create({
-  chartContainer: {
-    margin: 10,
-    backgroundColor: '#fff',
-    paddingBottom: 20,
-    flex: 1,
-    paddingHorizontal: 10,
-    borderRadius: 12,
-    // marginHorizontal: 10,
-  },
+  chartContainer: {},
 });
 
 export default EnergyTotalMonth;

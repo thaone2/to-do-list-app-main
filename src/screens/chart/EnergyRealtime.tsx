@@ -134,15 +134,8 @@
 // export default EnergyRealtime;
 
 import database from '@react-native-firebase/database';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {Dimensions, FlatList, ScrollView, View} from 'react-native';
 import {
   VictoryAxis,
   VictoryBar,
@@ -203,12 +196,23 @@ const EnergyRealtime: React.FC = () => {
   }, [fetchRealTimeData]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        margin: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingBottom: 20,
+      }}>
       <TextComponent
-        text={`Lượng điện tích lũy thời gian thực`}
+        text={`Lượng điện tích lũy gần đây`}
         color="green"
         size={15}
-        styles={styles.headerText}
+        styles={{
+          paddingTop: 10,
+          marginBottom: -40,
+          textTransform: 'uppercase',
+          textAlign: 'center',
+        }}
       />
 
       {/* Biểu đồ */}
@@ -243,7 +247,6 @@ const EnergyRealtime: React.FC = () => {
         />
       </VictoryChart>
 
-      {/* Danh sách dữ liệu */}
       <View
         style={{
           flex: 1,
@@ -254,7 +257,7 @@ const EnergyRealtime: React.FC = () => {
           <FlatList
             data={Object.entries(sortedRawData)}
             keyExtractor={(item: any) => item[0]}
-            style={styles.flatList}
+            style={{marginTop: 20, paddingHorizontal: 10}}
             renderItem={({item}) => {
               const [date, value] = item;
               return (
@@ -292,39 +295,5 @@ const EnergyRealtime: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingBottom: 20,
-  },
-  headerText: {
-    paddingTop: 10,
-    marginBottom: -40,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-  },
-  flatList: {
-    marginTop: 20,
-    paddingHorizontal: 10,
-  },
-  listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  listItemText: {
-    fontSize: 14,
-    color: 'black',
-  },
-  listItemValue: {
-    fontSize: 14,
-    color: 'blue',
-  },
-});
 
 export default EnergyRealtime;
