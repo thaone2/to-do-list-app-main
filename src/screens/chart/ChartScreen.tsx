@@ -6,7 +6,7 @@ import EnergyTotalMonth from './EnergyTotalMonth';
 
 const ChartScreen: React.FC = () => {
   return (
-    <View style={{flex: 1, marginHorizontal: 8}}>
+    <View style={{flex: 1, marginHorizontal: 6, marginVertical: 8}}>
       <ScrollView>
         {/* Biểu đồ thời gian thực */}
         <EnergyRealtime />
