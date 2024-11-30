@@ -227,6 +227,7 @@ import TextComponent from '../../components/TextComponent';
 import {colors} from '../../constants/colors';
 import {globalStyles} from '../../styles/globalStyles';
 
+const screenWidth = Dimensions.get('window').width;
 const EnergyTotalMonth = () => {
   const [numMonths] = useState(6);
   const [isLoading, setIsLoading] = useState(true); // Trạng thái tải
@@ -305,7 +306,7 @@ const EnergyTotalMonth = () => {
 
         setTimeout(() => {
           setIsLoading(false); // Kết thúc trạng thái tải sau khi xử lý
-        }, 1000); // Thêm 1 giây để tạo hiệu ứng mượt
+        }, 2000); // Thêm 1 giây để tạo hiệu ứng mượt
       } catch (err) {
         console.error('Error fetching data:', err);
         setIsLoading(false); // Dừng trạng thái tải nếu gặp lỗi
@@ -327,17 +328,24 @@ const EnergyTotalMonth = () => {
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: colors.bgColor,
+          padding: 20,
         }}>
-        {/* <ActivityIndicator size="large" color="blue" /> */}
-        <TextComponent
-          text="Đang tải dữ liệu..."
-          color="black"
-          size={18}
-          styles={[
-            globalStyles.inputContainer,
-            {textAlign: 'center', marginTop: 20, width: '96%'},
-          ]}
-        />
+        <View style={[globalStyles.inputContainer, {width: screenWidth - 25}]}>
+          <ActivityIndicator size="large" animating={true} color="blue" />
+          <TextComponent
+            text="Đang tải dữ liệu..."
+            color="blue"
+            size={16}
+            styles={[
+              {
+                textAlign: 'center',
+                marginTop: 5,
+                marginBottom: 5,
+                width: screenWidth - 25,
+              },
+            ]}
+          />
+        </View>
       </View>
     );
   }

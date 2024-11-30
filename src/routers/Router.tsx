@@ -201,6 +201,11 @@ import {
   Home2,
   Notification1,
   Setting3,
+  Illustrator,
+  Ankr,
+  Code,
+  Box,
+  CpuSetting,
 } from 'iconsax-react-native';
 import HomeScreen from '../screens/homes/HomeScreen';
 import ChartScreen from '../screens/chart/ChartScreen';
@@ -210,6 +215,7 @@ import {colors} from '../constants/colors';
 import auth from '@react-native-firebase/auth';
 import LoginScreen from '../auth/LoginScreen';
 import RegisterScreen from '../auth/RegisterScreen';
+import MachineLearningScreen from '../screens/machineLearning/MachineLearningScreen';
 
 const Router = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -246,6 +252,7 @@ const Router = () => {
         screenOptions={({route}) => ({
           tabBarStyle: {
             height: tabBarHeight,
+            // height: 70,
             paddingBottom: tabBarHeight > 0 ? 10 : 0,
             paddingTop: tabBarHeight > 0 ? 10 : 0,
           },
@@ -257,25 +264,31 @@ const Router = () => {
             let iconName;
             if (route.name === 'Home') {
               iconName = focused ? (
-                <Home2 size={38} color="green" variant="Bold" />
+                <Home2 size={40} color="green" variant="Bold" />
               ) : (
                 <Home2 size={32} color={color} />
               );
             } else if (route.name === 'Chart') {
               iconName = focused ? (
-                <ChartSquare size={38} color="coral" variant="Bold" />
+                <ChartSquare size={40} color="coral" variant="Bold" />
               ) : (
                 <ChartSquare size={32} color={color} />
               );
             } else if (route.name === 'Notification') {
               iconName = focused ? (
-                <Notification1 size={38} color="orange" variant="Bold" />
+                <Notification1 size={40} color="orange" variant="Bold" />
               ) : (
                 <Notification1 size={32} color={color} />
               );
+            } else if (route.name === 'MachineLearning') {
+              iconName = focused ? (
+                <CpuSetting size={40} color="#2ccce4" variant="Bold" />
+              ) : (
+                <CpuSetting size={32} color={color} />
+              );
             } else if (route.name === 'Setting') {
               iconName = focused ? (
-                <Setting3 size={38} color="black" variant="Bold" />
+                <Setting3 size={40} color="black" variant="Bold" />
               ) : (
                 <Setting3 size={32} color={color} />
               );
@@ -293,10 +306,10 @@ const Router = () => {
               backgroundColor: colors.bgColor,
             },
             headerTitleStyle: {
-              fontSize: 28,
+              fontSize: 20,
             },
             tabBarActiveTintColor: 'green',
-            title: 'Lab PC Management',
+            title: 'LAB PC MANAGEMENT',
           }}
         />
         <Tab.Screen
@@ -308,10 +321,10 @@ const Router = () => {
               backgroundColor: colors.bgColor,
             },
             headerTitleStyle: {
-              fontSize: 28,
+              fontSize: 20,
             },
             tabBarActiveTintColor: 'coral',
-            title: 'Biểu đồ lượng điện sử dụng',
+            title: 'BIỂU ĐỒ LƯỢNG ĐIỆN',
           }}
         />
         <Tab.Screen
@@ -323,10 +336,25 @@ const Router = () => {
               backgroundColor: colors.bgColor,
             },
             headerTitleStyle: {
-              fontSize: 28,
+              fontSize: 20,
             },
             tabBarActiveTintColor: 'orange',
-            title: 'Thông báo',
+            title: 'THÔNG BÁO',
+          }}
+        />
+        <Tab.Screen
+          name="MachineLearning"
+          component={MachineLearningScreen}
+          options={{
+            tabBarLabel: 'ML',
+            headerStyle: {
+              backgroundColor: colors.bgColor,
+            },
+            headerTitleStyle: {
+              fontSize: 20,
+            },
+            tabBarActiveTintColor: '#2ccce4',
+            title: 'MACHINE LEARNING',
           }}
         />
         <Tab.Screen
@@ -338,9 +366,10 @@ const Router = () => {
               backgroundColor: colors.bgColor,
             },
             headerTitleStyle: {
-              fontSize: 28,
+              fontSize: 20,
             },
             tabBarActiveTintColor: 'black',
+            title: 'SETTING',
           }}
         />
       </Tab.Navigator>

@@ -630,7 +630,13 @@
 
 import database from '@react-native-firebase/database';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Dimensions, FlatList, ScrollView, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  ScrollView,
+  View,
+} from 'react-native';
 import {
   VictoryAxis,
   VictoryBar,
@@ -641,6 +647,8 @@ import {
 import TextComponent from '../../components/TextComponent';
 import {colors} from '../../constants/colors';
 import {globalStyles} from '../../styles/globalStyles';
+
+const screenWidth = Dimensions.get('window').width;
 
 const EnergyConsumptionChart = () => {
   const chartDataRef = useRef({
@@ -700,7 +708,7 @@ const EnergyConsumptionChart = () => {
         // Thêm thời gian chờ sau khi xử lý dữ liệu
         setTimeout(() => {
           setIsLoading(false); // Kết thúc trạng thái tải sau 1.5 giây
-        }, 1500);
+        }, 2000);
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Không thể tải dữ liệu. Vui lòng thử lại.');
@@ -727,15 +735,22 @@ const EnergyConsumptionChart = () => {
           backgroundColor: colors.bgColor,
           padding: 20,
         }}>
-        <TextComponent
-          text="Đang tải dữ liệu..."
-          color="black"
-          size={18}
-          styles={[
-            globalStyles.inputContainer,
-            {textAlign: 'center', marginTop: 20, width: '106%'},
-          ]}
-        />
+        <View style={[globalStyles.inputContainer, {width: screenWidth - 25}]}>
+          <ActivityIndicator size="large" animating={true} color="coral" />
+          <TextComponent
+            text="Đang tải dữ liệu..."
+            color="coral"
+            size={16}
+            styles={[
+              {
+                textAlign: 'center',
+                marginTop: 5,
+                marginBottom: 5,
+                width: screenWidth - 25,
+              },
+            ]}
+          />
+        </View>
       </View>
     );
   }

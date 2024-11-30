@@ -227,7 +227,10 @@ const EnergyRealtime: React.FC = () => {
 
     const onDataChange = (snapshot: any) => {
       setRawData(snapshot.val());
-      setIsLoading(false); // Dữ liệu đã được tải xong
+      // setIsLoading(false); // Dữ liệu đã được tải xong
+      setTimeout(() => {
+        setIsLoading(false); // Kết thúc trạng thái tải sau 1.5 giây
+      }, 2000);
     };
 
     setIsLoading(true); // Bắt đầu tải
@@ -242,28 +245,6 @@ const EnergyRealtime: React.FC = () => {
 
   if (isLoading) {
     return (
-      // <View
-      //   style={{
-      //     flex: 1,
-      //     justifyContent: 'center',
-      //     alignItems: 'center',
-      //     backgroundColor: 'red',
-      //     position: 'relative',
-      //     left: 0,
-      //     right: 0,
-      //     top: 0,
-      //     bottom: 0,
-      //     // zIndex: 10,
-      //   }}>
-      //   {/* <ActivityIndicator size="large" animating={true} color="green" /> */}
-
-      //   <TextComponent
-      //     text="Đang tải dữ liệu..."
-      //     color="green"
-      //     size={16}
-      //     styles={{marginTop: 10}}
-      //   />
-      // </View>
       <View
         style={{
           flex: 1,
@@ -272,15 +253,26 @@ const EnergyRealtime: React.FC = () => {
           backgroundColor: colors.bgColor,
           padding: 20,
         }}>
-        <TextComponent
-          text="Đang tải dữ liệu..."
-          color="black"
-          size={18}
-          styles={[
+        <View
+          style={[
             globalStyles.inputContainer,
-            {textAlign: 'center', marginTop: 20, width: screenWidth - 25},
-          ]}
-        />
+            {marginTop: 20, width: screenWidth - 25},
+          ]}>
+          <ActivityIndicator size="large" animating={true} color="green" />
+          <TextComponent
+            text="Đang tải dữ liệu..."
+            color="green"
+            size={16}
+            styles={[
+              {
+                textAlign: 'center',
+                marginTop: 5,
+                marginBottom: 5,
+                width: screenWidth - 25,
+              },
+            ]}
+          />
+        </View>
       </View>
     );
   }

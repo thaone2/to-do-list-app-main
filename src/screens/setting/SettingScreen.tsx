@@ -33,7 +33,7 @@ const SettingScreen = () => {
           ]}
           color="black"
           text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng. 😂🙂"
-          size={20}
+          size={18}
         />
         <TouchableOpacity onPress={handleDangXuat}>
           <RowComponent
@@ -42,12 +42,12 @@ const SettingScreen = () => {
               {
                 // paddingVertical: 20,
                 paddingHorizontal: 20,
-                backgroundColor: 'white',
+                backgroundColor: '#FCA0A1',
                 marginHorizontal: 20,
                 marginVertical: 20,
               },
             ]}>
-            <TextComponent text="Đăng xuất" color="black" size={20} />
+            <TextComponent text="Đăng xuất" color="black" size={18} />
 
             <Logout size={34} color="black" />
           </RowComponent>
