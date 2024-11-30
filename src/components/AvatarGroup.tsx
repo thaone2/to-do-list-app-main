@@ -1,10 +1,9 @@
 import React from 'react';
-import RowComponent from './RowComponent';
 import {Image, View} from 'react-native';
-import TextComponent from './TextComponent';
 import {colors} from '../constants/colors';
-import {globalStyles} from '../styles/globalStyles';
 import {fontFamilies} from '../constants/fontFamilies';
+import RowComponent from './RowComponent';
+import TextComponent from './TextComponent';
 
 const AvatarGroup = () => {
   const uidsLength = 10;

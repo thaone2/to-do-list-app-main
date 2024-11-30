@@ -1,12 +1,11 @@
+import {useNavigation} from '@react-navigation/native';
 import {ArrowLeft2} from 'iconsax-react-native';
 import React, {ReactNode} from 'react';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {colors} from '../constants/colors';
 import {fontFamilies} from '../constants/fontFamilies';
 import {globalStyles} from '../styles/globalStyles';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   title?: string;
@@ -18,13 +17,11 @@ interface Props {
 
 const Container = (props: Props) => {
   const {title, back, right, children, isScroll} = props;
-
   const navigation: any = useNavigation();
 
   return (
     <View style={[globalStyles.container, {flex: 1}]}>
       {/* Header container */}
-
       <RowComponent
         styles={{
           paddingHorizontal: 16,

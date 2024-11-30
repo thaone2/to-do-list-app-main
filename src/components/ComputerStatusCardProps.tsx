@@ -1,8 +1,8 @@
-import {Platform, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {Platform, StyleSheet, View} from 'react-native';
 import ComputerImageComponent from './ComputerImageComponent';
-import TextComponent from './TextComponent';
 import SwitchComponent from './SwitchComponent';
+import TextComponent from './TextComponent';
 
 interface Props {
   isAuto: boolean;

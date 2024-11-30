@@ -183,7 +183,6 @@ import {
 import TextComponent from '../../components/TextComponent';
 import {colors} from '../../constants/colors';
 import {globalStyles} from '../../styles/globalStyles';
-// import {ActivityIndicator} from 'react-native-paper';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -284,6 +283,7 @@ const EnergyRealtime: React.FC = () => {
         backgroundColor: 'white',
         borderRadius: 10,
         paddingBottom: 20,
+        paddingTop: 8,
       }}>
       <TextComponent
         text={`Lượng điện tích lũy gần đây`}
