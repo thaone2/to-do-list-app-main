@@ -5,6 +5,7 @@ import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, ImageBackground, Platform, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import DropShadow from 'react-native-drop-shadow';
 
 import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
@@ -289,7 +290,6 @@ const HomeScreen = ({navigation}: any) => {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'rgba(113, 77, 217, 0.2)',
                 borderRadius: 14,
               },
             ]}>
@@ -322,14 +322,21 @@ const HomeScreen = ({navigation}: any) => {
               />
 
               <View
-                style={{
-                  width: 35,
-                  height: 35,
-                  borderRadius: 35 / 2,
-                  backgroundColor:
-                    hlkRadarValueRef.current === 1 ? '#5DF15A' : '#FF6347',
-                  marginTop: 4,
-                }}
+                style={[
+                  {
+                    width: 30,
+                    height: 30,
+                    borderRadius: 30 / 2,
+                    backgroundColor:
+                      hlkRadarValueRef.current === 1 ? '#5DF15A' : '#FF6347',
+                    marginTop: 4,
+                    shadowColor: 'black',
+                    shadowOffset: {width: 0, height: 100},
+                    shadowOpacity: 1,
+                    shadowRadius: 60,
+                    elevation: 60,
+                  },
+                ]}
               />
               <View
                 style={{

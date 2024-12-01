@@ -234,6 +234,7 @@
 // export default NotificationScreen;
 
 import Icon from 'react-native-vector-icons/AntDesign';
+import IconCheck from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import database from '@react-native-firebase/database';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -333,6 +334,12 @@ const NotificationScreen: React.FC = () => {
     });
   };
 
+  const handleDeleteAllWaring = () => {
+    setWarnings([]);
+    AsyncStorage.setItem('warnings', JSON.stringify([]));
+    return setWarnings;
+  };
+
   const WarningItem: React.FC<{item: Warning; index: number}> = props => {
     const {item, index} = props;
 
@@ -344,7 +351,7 @@ const NotificationScreen: React.FC = () => {
       );
 
       return {
-        opacity: withTiming(isVisible ? 1 : 0),
+        opacity: withTiming(isVisible ? 1 : 0.2),
         transform: [
           {
             scale: withTiming(isVisible ? 1 : 0.5),
@@ -409,15 +416,39 @@ const NotificationScreen: React.FC = () => {
           />
         </View>
       ) : (
-        <FlatList
-          data={warnings.slice().reverse()}
-          keyExtractor={(_, index) => index.toString()}
-          contentContainerStyle={{paddingVertical: 20}}
-          onViewableItemsChanged={onViewableItemsChangedRef.current.callback}
-          renderItem={({item, index}) => (
-            <WarningItem item={item} index={index} />
-          )}
-        />
+        <View>
+          <TouchableOpacity
+            style={{
+              marginTop: 20,
+              top: -50,
+              right: 20,
+              position: 'absolute',
+              zIndex: 1,
+            }}
+            onPress={() => {
+              handleDeleteAllWaring();
+            }}>
+            <TextComponent
+              text="☑ Đọc tất cả"
+              color="gray"
+              size={16}
+              styles={{
+                textAlign: 'right',
+                paddingHorizontal: 4,
+              }}
+            />
+          </TouchableOpacity>
+
+          <FlatList
+            data={warnings.slice().reverse()}
+            keyExtractor={(_, index) => index.toString()}
+            contentContainerStyle={{paddingVertical: 20}}
+            onViewableItemsChanged={onViewableItemsChangedRef.current.callback}
+            renderItem={({item, index}) => (
+              <WarningItem item={item} index={index} />
+            )}
+          />
+        </View>
       )}
     </View>
   );
