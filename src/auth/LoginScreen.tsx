@@ -101,9 +101,9 @@ const LoginScreen = ({navigation}: any) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setErrorText('Please enter your email and password!!!');
+      setErrorText('Vui lòng nhập email và password !!!');
       // Hiển thị thông báo lỗi dạng Alert
-      Alert.alert('Thông báo lỗi', 'Please enter your email and password!!!', [
+      Alert.alert('Lỗi', 'Vui lòng nhập email và password !!!', [
         {text: 'OK', style: 'cancel'},
       ]);
     } else {
@@ -139,12 +139,7 @@ const LoginScreen = ({navigation}: any) => {
           justifyContent: 'center',
         }}>
         <RowComponent styles={{marginBottom: 16}}>
-          <TitleComponent
-            color={colors.gray2}
-            text="LOGIN"
-            size={36}
-            flex={0}
-          />
+          <TitleComponent color="coral" text="LOGIN" size={36} flex={0} />
         </RowComponent>
 
         <InputComponent
@@ -152,9 +147,10 @@ const LoginScreen = ({navigation}: any) => {
           value={email}
           onChange={val => setEmail(val)}
           placeholder="Email"
-          prefix={<Sms size={22} color={colors.gray2} />}
+          prefix={<Sms size={22} color="coral" />}
           allowClear
           type="email-address"
+          styles={{flex: 0, alignItems: 'center'}}
         />
 
         <InputComponent
@@ -163,19 +159,19 @@ const LoginScreen = ({navigation}: any) => {
           value={password}
           onChange={val => setPassword(val)}
           placeholder="Password"
-          prefix={<Lock size={22} color={colors.gray2} />}
+          prefix={<Lock size={22} color="coral" />}
         />
 
         <ButtonComponent
           isLoading={isLoading}
           text="Login"
           onPress={handleLogin}
-          color="#3EE8F1"
+          color="coral"
         />
 
         <RowComponent styles={{marginTop: 20}}>
           <Text style={[globalStyles.text, {color: colors.gray2}]}>
-            You don't have an account?{' '}
+            You don't have an account?
             <Text
               style={{color: 'coral'}}
               onPress={() => navigation.navigate('RegisterScreen')}>

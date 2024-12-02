@@ -2,9 +2,11 @@ import {Eye, EyeSlash} from 'iconsax-react-native';
 import React, {ReactNode, useState} from 'react';
 import {
   KeyboardTypeOptions,
+  StyleProp,
   TextInput,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -24,6 +26,7 @@ interface Props {
   numberOfLine?: number;
   type?: KeyboardTypeOptions;
   isPassword?: boolean;
+  styles?: StyleProp<ViewStyle>;
 }
 
 const InputComponent = (props: Props) => {
@@ -39,12 +42,13 @@ const InputComponent = (props: Props) => {
     numberOfLine,
     type,
     isPassword,
+    styles,
   } = props;
 
   const [showPass, setShowPass] = useState(false);
 
   return (
-    <View style={{marginBottom: 16}}>
+    <View style={[styles, {marginBottom: 16}]}>
       {title && <TitleComponent text={title} color="black" />}
       <RowComponent
         styles={[
@@ -72,7 +76,7 @@ const InputComponent = (props: Props) => {
                 padding: 0,
                 paddingVertical: 2,
                 flex: 1,
-                color: 'black',
+                color: 'coral',
               },
             ]}
             placeholder={placeholder ?? ''}
@@ -92,7 +96,7 @@ const InputComponent = (props: Props) => {
           <TouchableOpacity
             style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end'}}
             onPress={() => onChange('')}>
-            <AntDesign name="close" size={30} color="black" />
+            <AntDesign name="close" size={20} color="black" />
           </TouchableOpacity>
         )}
 

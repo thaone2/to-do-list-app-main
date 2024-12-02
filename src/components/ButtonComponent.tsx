@@ -1,5 +1,10 @@
 import React, {ReactNode} from 'react';
-import {ActivityIndicator, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleProp,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import {colors} from '../constants/colors';
 import TextComponent from './TextComponent';
 
@@ -9,23 +14,29 @@ interface Props {
   onPress: () => void;
   color?: string;
   isLoading?: boolean;
+  backgroundColor?: string;
+  styles?: StyleProp<ViewStyle>;
 }
 
 const ButtonComponent = (props: Props) => {
-  const {text, icon, onPress, color, isLoading} = props;
+  const {text, icon, onPress, color, isLoading, backgroundColor, styles} =
+    props;
 
   return (
     <TouchableOpacity
       disabled={isLoading}
       onPress={onPress}
-      style={{
-        backgroundColor: color ? color : isLoading ? colors.gray2 : colors.blue,
-        padding: 16,
-        width: '100%',
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+      style={[
+        styles,
+        {
+          padding: 16,
+          width: '100%',
+          borderRadius: 12,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: backgroundColor ? backgroundColor : 'white',
+        },
+      ]}>
       {isLoading ? (
         <ActivityIndicator />
       ) : (
@@ -35,8 +46,8 @@ const ButtonComponent = (props: Props) => {
           size={16}
           styles={{
             textTransform: 'uppercase',
-            color: 'white',
             fontWeight: 'bold',
+            color: color ? color : isLoading ? colors.gray2 : colors.blue,
           }}
         />
       )}

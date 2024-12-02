@@ -62,7 +62,7 @@ const RegisterScreen = ({navigation}: any) => {
         }}>
         <RowComponent styles={{marginBottom: 16}}>
           <TitleComponent
-            color={colors.gray2}
+            color={colors.blue}
             text="SIGN IN"
             size={32}
             flex={0}

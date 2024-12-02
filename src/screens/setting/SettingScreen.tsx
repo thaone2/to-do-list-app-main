@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import {Logout} from 'iconsax-react-native';
 import React from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, TouchableOpacity, View} from 'react-native';
 
 import Container from '../../components/Container';
 import RowComponent from '../../components/RowComponent';
@@ -28,28 +28,25 @@ const SettingScreen = () => {
             {
               backgroundColor: '#DEDEDF',
               marginHorizontal: 20,
-              // marginVertical: 20,
             },
           ]}
           color="black"
-          text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng. 😂🙂"
-          size={18}
+          text="Chào bạn, chúc bạn một ngày tốt lành khi sử dụng ứng dụng. 🙂"
         />
         <TouchableOpacity onPress={handleDangXuat}>
           <RowComponent
             styles={[
               globalStyles.inputContainer,
               {
-                // paddingVertical: 20,
                 paddingHorizontal: 20,
-                backgroundColor: '#FCA0A1',
+                backgroundColor: '#C6002E',
                 marginHorizontal: 20,
                 marginVertical: 20,
               },
             ]}>
-            <TextComponent text="Đăng xuất" color="black" size={18} />
+            <TextComponent text="Đăng xuất" color="white" />
 
-            <Logout size={34} color="black" />
+            <Logout size={25} color="white" />
           </RowComponent>
         </TouchableOpacity>
       </Container>
@@ -58,5 +55,3 @@ const SettingScreen = () => {
 };
 
 export default SettingScreen;
-
-const styles = StyleSheet.create({});

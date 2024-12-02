@@ -3,9 +3,8 @@ import {Calendar, Clock} from 'iconsax-react-native';
 import moment from 'moment';
 import 'moment/locale/vi'; // Để hiển thị thứ bằng tiếng Việt
 import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, ImageBackground, Platform, Text, View} from 'react-native';
+import {Dimensions, ImageBackground, Platform, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import DropShadow from 'react-native-drop-shadow';
 
 import CardImageConponent from '../../components/CardImageConponent';
 import ComputerImageComponent from '../../components/ComputerImageComponent';
@@ -15,8 +14,9 @@ import SectionComponent from '../../components/SectionComponent';
 import SwitchComponent from '../../components/SwitchComponent';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
+import BlinkingIndicator from './BlinkingIndicator';
 
-const HomeScreen = ({navigation}: any) => {
+const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   const screenWidth = Dimensions.get('window').width;
   const timeRef = useRef(moment().format('HH:mm:ss'));
   const dateRef = useRef(moment().format('dddd, DD-MM-YYYY'));
@@ -320,24 +320,7 @@ const HomeScreen = ({navigation}: any) => {
                   paddingHorizontal: 2,
                 }}
               />
-
-              <View
-                style={[
-                  {
-                    width: 30,
-                    height: 30,
-                    borderRadius: 30 / 2,
-                    backgroundColor:
-                      hlkRadarValueRef.current === 1 ? '#5DF15A' : '#FF6347',
-                    marginTop: 4,
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 100},
-                    shadowOpacity: 1,
-                    shadowRadius: 60,
-                    elevation: 60,
-                  },
-                ]}
-              />
+              <BlinkingIndicator isActive={hlkRadarValueRef.current === 1} />
               <View
                 style={{
                   marginTop: 6,

@@ -8,27 +8,11 @@ import {colors} from './src/constants/colors';
 import Router from './src/routers/Router';
 
 const App = () => {
-  // useEffect cho màn hình đứng
   useEffect(() => {
     Orientation.lockToPortrait(); // Khóa hướng dọc khi màn hình được load
     return () => {
       Orientation.unlockAllOrientations();
     };
-  }, []);
-
-  // useEff lấy token cho message
-  useEffect(() => {
-    const getToken = async () => {
-      const token = await messaging().getToken();
-      console.log('FCM Token:', token);
-    };
-    getToken();
-
-    // Lắng nghe tin nhắn khi ứng dụng chạy nền
-    // const unsubscribe = messaging().onMessage(async remoteMessage => {
-    //   Alert.alert('Thông báo', JSON.stringify(remoteMessage.notification));
-    // });
-    // return unsubscribe;
   }, []);
 
   async function requestUserPermission() {
