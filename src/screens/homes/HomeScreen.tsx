@@ -15,6 +15,7 @@ import SwitchComponent from '../../components/SwitchComponent';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
 import BlinkingIndicator from './BlinkingIndicator';
+import ComputerUsageTime from './ComputerUsageTime';
 
 const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   const screenWidth = Dimensions.get('window').width;
@@ -474,6 +475,9 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
           />
         </SectionComponent>
 
+        {/* Thời gian sử dụng máy tính */}
+        <ComputerUsageTime />
+
         {/* Pzem */}
         <SectionComponent>
           <View style={[globalStyles.inputContainer]}>
@@ -503,25 +507,25 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
               <TextComponent
                 text={`Voltage: ${voltageRef.current} V`}
                 color="blue"
-                size={17}
-                styles={{fontWeight: 'normal', marginLeft: 8}}
+                size={15}
+                styles={{fontWeight: 'normal', marginLeft: 10}}
               />
               <TextComponent
                 text={`Frequency: ${frequencyRef.current} Hz`}
                 color="green"
-                size={17}
+                size={15}
                 styles={{fontWeight: 'normal', marginLeft: 10}}
               />
               <TextComponent
                 text={`Current: ${currentRef.current} A`}
                 color="#444444"
-                size={17}
+                size={15}
                 styles={{fontWeight: 'normal', marginLeft: 10}}
               />
               <TextComponent
                 text={`Energy: ${energyRef.current} kWh`}
                 color="purple"
-                size={17}
+                size={15}
                 styles={{fontWeight: 'normal', marginLeft: 10}}
               />
             </View>

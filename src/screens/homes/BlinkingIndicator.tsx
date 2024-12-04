@@ -8,31 +8,32 @@ const BlinkingIndicator = ({isActive}: {isActive: boolean}) => {
   // Hiệu ứng chớp nháy
   useEffect(() => {
     if (isActive) {
+      // hiệu ứng cho độ mờ rõ
       Animated.loop(
         Animated.sequence([
           Animated.timing(outerOpacity, {
-            toValue: 0.2, // Độ trong suốt thấp nhất
-            duration: 300, // Thời gian chuyển đổi
+            toValue: 0.1, // Độ trong suốt thấp nhất
+            duration: 1000, // Thời gian chuyển đổi
             useNativeDriver: true,
           }),
           Animated.timing(outerOpacity, {
-            toValue: 0.7, // Độ trong suốt cao nhất
+            toValue: 1, // Độ trong suốt cao nhất
             duration: 1000,
             useNativeDriver: true,
           }),
         ]),
       ).start();
-
+      // hiệu ứng phóng to thu nhỏ
       Animated.loop(
         Animated.sequence([
           Animated.timing(innerScale, {
-            toValue: 1.1, // Phóng to hình tròn bên trong
-            duration: 100,
+            toValue: 1, // Phóng to hình tròn bên trong
+            duration: 800,
             useNativeDriver: true,
           }),
           Animated.timing(innerScale, {
-            toValue: 1, // Thu nhỏ về ban đầu
-            duration: 600,
+            toValue: 0.8, // Thu nhỏ về ban đầu
+            duration: 900,
             useNativeDriver: true,
           }),
         ]),
@@ -48,14 +49,17 @@ const BlinkingIndicator = ({isActive}: {isActive: boolean}) => {
           opacity: outerOpacity,
           backgroundColor: isActive ? '#5DF15A' : '#FF6347',
           position: 'absolute',
-          width: 40,
-          height: 40,
-          borderRadius: 20,
+          width: 35,
+          height: 35,
+          borderRadius: 35 / 2,
           shadowColor: 'black',
           shadowOffset: {width: 0, height: 2},
-          shadowOpacity: 0.1,
+          shadowOpacity: 0.2,
           shadowRadius: 8,
           elevation: 10,
+          borderWidth: 1,
+          // borderColor: isActive ? '#5DF15A' : '#FF6347',
+          borderColor: 'gray',
         }}
       />
 
@@ -66,7 +70,9 @@ const BlinkingIndicator = ({isActive}: {isActive: boolean}) => {
           transform: [{scale: innerScale}],
           width: 30,
           height: 30,
-          borderRadius: 15,
+          borderRadius: 30 / 2,
+          borderWidth: 1,
+          borderColor: isActive ? '#5DF15A' : '#FF6390',
         }}
       />
     </View>
@@ -79,6 +85,8 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    // flex: 1,
+    // backgroundColor: 'green',
   },
 });
 

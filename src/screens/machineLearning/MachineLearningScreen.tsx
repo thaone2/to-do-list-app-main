@@ -36,6 +36,7 @@ const MachineLearningScreen = () => {
             },
           ]}
           color="black"
+          size={16}
         />
       </TouchableOpacity>
       <TextComponent
@@ -47,6 +48,7 @@ const MachineLearningScreen = () => {
           textAlign: 'center',
           padding: 10,
         }}
+        size={16}
       />
       <TouchableOpacity style={{marginTop: 20}}>
         <TextComponent
@@ -61,6 +63,7 @@ const MachineLearningScreen = () => {
             },
           ]}
           color="white"
+          size={16}
         />
       </TouchableOpacity>
 
