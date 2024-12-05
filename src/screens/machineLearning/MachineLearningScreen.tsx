@@ -1,11 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, View, ViewToken} from 'react-native';
-import {useSharedValue} from 'react-native-reanimated';
+import {TouchableOpacity, View} from 'react-native';
 import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
 
 const MachineLearningScreen = () => {
-  const viewableItems = useSharedValue<ViewToken[]>([]);
   return (
     <View style={{flex: 1}}>
       {/* <View

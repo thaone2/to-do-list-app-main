@@ -35,7 +35,6 @@ const ComputerStatusCardProps = (props: Props) => {
           styles={styles.temperatureText}
           color="#F8C266"
           size={13}
-          // text={`Temp: ${temperature} ℃`}
           text={
             temperature === -127
               ? 'No reading data'
@@ -72,6 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2EAEA',
     borderRadius: 10,
     marginTop: 4,
+    paddingHorizontal: 5,
   },
   switch: {
     paddingVertical: 8,

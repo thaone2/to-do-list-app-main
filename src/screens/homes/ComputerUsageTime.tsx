@@ -1,9 +1,10 @@
+import database from '@react-native-firebase/database';
 import React, {useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
-import database from '@react-native-firebase/database';
-import TextComponent from '../../components/TextComponent';
 import SectionComponent from '../../components/SectionComponent';
+import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
+import {colors} from '../../constants/colors';
 
 interface ComputerTime {
   computer1: string;
@@ -35,9 +36,9 @@ const ComputerUsageTime: React.FC = () => {
   const updateUsageTime = (key: keyof ComputerTime, value: string) => {
     usageTimeRef.current[key] = value;
 
-    // Chỉ set state nếu giá trị thay đổi
     setUsageTime(prev => {
       if (prev[key] !== value) {
+        // Chỉ set state nếu giá trị thay đổi
         return {...prev, [key]: value};
       }
       return prev;
@@ -77,7 +78,7 @@ const ComputerUsageTime: React.FC = () => {
         style={[
           globalStyles.inputContainer,
           {
-            backgroundColor: 'white',
+            backgroundColor: '#B9B6D6',
           },
         ]}>
         <View

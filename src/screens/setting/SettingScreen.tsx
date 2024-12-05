@@ -40,7 +40,7 @@ const SettingScreen = () => {
               globalStyles.inputContainer,
               {
                 paddingHorizontal: 20,
-                backgroundColor: '#C6002E',
+                backgroundColor: '#6998FF',
                 marginHorizontal: 20,
                 marginVertical: 20,
               },

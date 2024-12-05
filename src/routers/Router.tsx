@@ -1,18 +1,21 @@
 import auth from '@react-native-firebase/auth';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, {useEffect, useState} from 'react';
+import {Keyboard, KeyboardAvoidingView, Platform} from 'react-native';
 import {
   ChartSquare,
   CpuSetting,
   Home2,
   Notification1,
   Setting3,
+  Notification,
+  Setting2,
 } from 'iconsax-react-native';
-import React, {useEffect, useState} from 'react';
-import {Keyboard, KeyboardAvoidingView, Platform} from 'react-native';
+
+import {colors} from '../constants/colors';
 import LoginScreen from '../auth/LoginScreen';
 import RegisterScreen from '../auth/RegisterScreen';
-import {colors} from '../constants/colors';
 import ChartScreen from '../screens/chart/ChartScreen';
 import HomeScreen from '../screens/homes/HomeScreen';
 import MachineLearningScreen from '../screens/machineLearning/MachineLearningScreen';

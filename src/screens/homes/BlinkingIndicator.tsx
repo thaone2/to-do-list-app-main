@@ -42,7 +42,13 @@ const BlinkingIndicator = ({isActive}: {isActive: boolean}) => {
   }, [isActive, outerOpacity, innerScale]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       {/* Hình tròn lớn */}
       <Animated.View
         style={{
@@ -78,16 +84,4 @@ const BlinkingIndicator = ({isActive}: {isActive: boolean}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flex: 1,
-    // backgroundColor: 'green',
-  },
-});
-
 export default BlinkingIndicator;

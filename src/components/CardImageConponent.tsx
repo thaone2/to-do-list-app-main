@@ -13,6 +13,7 @@ const CardImageConponent = (props: Props) => {
   return (
     <ImageBackground
       source={require('../assets/images/card-bg.png')}
+      // source={require('../assets/images/logo-iuh.png')}
       imageStyle={{borderRadius: 12}}
       style={[globalStyles.card, styles]}>
       <View

@@ -16,6 +16,8 @@ import TextComponent from '../../components/TextComponent';
 import {globalStyles} from '../../styles/globalStyles';
 import BlinkingIndicator from './BlinkingIndicator';
 import ComputerUsageTime from './ComputerUsageTime';
+import Pzem004TSensor from './Pzem004TSensor';
+import {colors} from '../../constants/colors';
 
 const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   const screenWidth = Dimensions.get('window').width;
@@ -41,49 +43,7 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   });
 
   const [isAuto, setIsAuto] = useState(0);
-
   const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
-
-  const voltageRef = useRef(0);
-  const currentRef = useRef(0);
-  const frequencyRef = useRef(0);
-  const energyRef = useRef(0);
-
-  // useEffect sensor Pzem
-  useEffect(() => {
-    const voltageRefPath = database().ref('/PZEM_Voltage/voltage');
-    const currentRefPath = database().ref('/PZEM_Voltage/current');
-    const frequencyRefPath = database().ref('/PZEM_Voltage/frequency');
-    const energyRefPath = database().ref('/PZEM_Voltage/energy');
-
-    const handleVoltageUpdate = (snapshot: {val: () => number}) => {
-      voltageRef.current = parseFloat(snapshot.val().toFixed(2));
-    };
-
-    const handleCurrentUpdate = (snapshot: {val: () => number}) => {
-      currentRef.current = parseFloat(snapshot.val().toFixed(2));
-    };
-
-    const handleFrequencyUpdate = (snapshot: {val: () => number}) => {
-      frequencyRef.current = parseFloat(snapshot.val().toFixed(2));
-    };
-    const handleEnergyUpdate = (snapshot: {val: () => number}) => {
-      energyRef.current = parseFloat(snapshot.val().toFixed(2));
-    };
-
-    voltageRefPath.on('value', handleVoltageUpdate);
-    currentRefPath.on('value', handleCurrentUpdate);
-    frequencyRefPath.on('value', handleFrequencyUpdate);
-    energyRefPath.on('value', handleEnergyUpdate);
-
-    // Cleanup function
-    return () => {
-      voltageRefPath.off('value', handleVoltageUpdate);
-      currentRefPath.off('value', handleCurrentUpdate);
-      frequencyRefPath.off('value', handleFrequencyUpdate);
-      energyRefPath.off('value', handleEnergyUpdate);
-    };
-  }, []);
 
   //useEffect sensor hlk radar
   useEffect(() => {
@@ -237,29 +197,36 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   return (
     <View style={{flex: 1}}>
       <Container isScroll>
-        {/* Đồng hồ */}
+        {/* Ngày tháng - Đồng hồ */}
         <SectionComponent>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <CardImageConponent color="rgba(67, 159, 238, 0.9)">
-              <Calendar size="32" color="#FF8A65" />
+            <CardImageConponent
+              color="rgba(183, 177, 284, 0.9)"
+              // color="rgba(67, 159, 238, 0.9)"
+            >
+              <Calendar size="32" color="white" />
               <View
                 style={{
-                  flex: 1,
+                  flex: 0,
                   justifyContent: 'center',
-                  alignItems: 'flex-end',
+                  alignItems: 'center',
+                  marginTop: 10,
                 }}>
                 <TextComponent
                   color="white"
                   font="semiBold"
                   size={16}
                   text={date}
-                  styles={{textTransform: 'capitalize', fontWeight: 'bold'}}
+                  styles={{
+                    textTransform: 'capitalize',
+                    fontWeight: 'bold',
+                  }}
                 />
               </View>
             </CardImageConponent>
 
-            <CardImageConponent styles={{}} color="rgba(128, 128, 128, 0.5)">
-              <Clock size="32" color="#FF8A65" />
+            <CardImageConponent color="rgba(67, 128, 128, 0.8)">
+              <Clock size="32" color="white" />
               <View
                 style={{
                   flex: 1,
@@ -283,7 +250,10 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
         {/* HLK Radar */}
         <SectionComponent styles={{flex: 1, flexDirection: 'row'}}>
           <ImageBackground
-            source={require('../../assets/images/logo-iuh.png')}
+            // source={require('../../assets/images/hlk-ld2410b.jpg')}
+            // source={require('../../assets/images/HLK_vip.png')}
+            source={require('../../assets/images/hlk-radar-2.jpg')}
+            // source={require('../../assets/images/logo-iuh.png')}
             imageStyle={{borderRadius: 12}}
             style={[
               globalStyles.card,
@@ -314,10 +284,10 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
               />
               <TextComponent
                 color="black"
-                size={16}
+                size={15}
                 text="Trạng thái cảm biến"
                 styles={{
-                  fontWeight: '600',
+                  fontWeight: 'bold',
                   paddingHorizontal: 2,
                 }}
               />
@@ -475,62 +445,11 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
           />
         </SectionComponent>
 
+        {/* Pzem */}
+        <Pzem004TSensor />
+
         {/* Thời gian sử dụng máy tính */}
         <ComputerUsageTime />
-
-        {/* Pzem */}
-        <SectionComponent>
-          <View style={[globalStyles.inputContainer]}>
-            <View
-              style={[
-                {
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flex: 1,
-                },
-              ]}>
-              <TextComponent
-                text="PZEM004T Sensor"
-                color="black"
-                size={17}
-                styles={{fontWeight: 'bold'}}
-              />
-            </View>
-            <View
-              style={[
-                {
-                  alignItems: 'flex-start',
-                  flex: 1,
-                  paddingVertical: 4,
-                },
-              ]}>
-              <TextComponent
-                text={`Voltage: ${voltageRef.current} V`}
-                color="blue"
-                size={15}
-                styles={{fontWeight: 'normal', marginLeft: 10}}
-              />
-              <TextComponent
-                text={`Frequency: ${frequencyRef.current} Hz`}
-                color="green"
-                size={15}
-                styles={{fontWeight: 'normal', marginLeft: 10}}
-              />
-              <TextComponent
-                text={`Current: ${currentRef.current} A`}
-                color="#444444"
-                size={15}
-                styles={{fontWeight: 'normal', marginLeft: 10}}
-              />
-              <TextComponent
-                text={`Energy: ${energyRef.current} kWh`}
-                color="purple"
-                size={15}
-                styles={{fontWeight: 'normal', marginLeft: 10}}
-              />
-            </View>
-          </View>
-        </SectionComponent>
       </Container>
     </View>
   );
