@@ -634,6 +634,7 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
   ScrollView,
   View,
 } from 'react-native';
@@ -707,8 +708,8 @@ const EnergyConsumptionChart = () => {
 
         // Thêm thời gian chờ sau khi xử lý dữ liệu
         setTimeout(() => {
-          setIsLoading(false); // Kết thúc trạng thái tải sau 1.5 giây
-        }, 2000);
+          setIsLoading(false);
+        }, 3000);
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Không thể tải dữ liệu. Vui lòng thử lại.');
@@ -735,9 +736,17 @@ const EnergyConsumptionChart = () => {
           backgroundColor: colors.bgColor,
           padding: 20,
         }}>
-        <View style={[globalStyles.inputContainer, {width: screenWidth - 25}]}>
-          <ActivityIndicator size="large" animating={true} color="coral" />
-          <TextComponent
+        <View
+          style={[
+            globalStyles.inputContainer,
+            {
+              width: screenWidth - 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+          ]}>
+          {/* <ActivityIndicator size="large" animating={true} color="coral" /> */}
+          {/* <TextComponent
             text="Đang tải dữ liệu..."
             color="coral"
             size={16}
@@ -745,6 +754,24 @@ const EnergyConsumptionChart = () => {
               {
                 textAlign: 'center',
                 marginTop: 5,
+                marginBottom: 5,
+                width: screenWidth - 25,
+              },
+            ]}
+          /> */}
+          <Image
+            // source={require('../../assets/images/Loading2.gif')}
+            source={require('../../assets/images/botunscreen.gif')}
+            style={{width: 150, height: 150}}
+          />
+          <TextComponent
+            text="Đang tải dữ liệu..."
+            color="black"
+            size={16}
+            styles={[
+              {
+                textAlign: 'center',
+                marginTop: -15,
                 marginBottom: 5,
                 width: screenWidth - 25,
               },
@@ -840,7 +867,7 @@ const EnergyConsumptionChart = () => {
                 <TextComponent
                   styles={{
                     borderColor: '#ccc',
-                    borderRightWidth: 1,
+                    // borderRightWidth: 1,
                     paddingRight: 10,
                   }}
                   text={`${item.date}`}

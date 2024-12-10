@@ -4,6 +4,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -54,7 +55,10 @@ const NotificationScreen: React.FC = () => {
     } catch (error) {
       console.error('Error fetching warnings from storage:', error);
     }
-    setLoading(false);
+
+    setTimeout(() => {
+      setLoading(false); // Kết thúc trạng thái tải sau khi xử lý
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -164,15 +168,19 @@ const NotificationScreen: React.FC = () => {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: '50%',
           }}>
-          <ActivityIndicator color="black" size="large" />
-          <TextComponent
+          {/* <ActivityIndicator color="black" size="large" /> */}
+          <Image
+            // source={require('../../assets/images/Loading2.gif')}
+            source={require('../../assets/images/botunscreen.gif')}
+            style={{width: 200, height: 200}}
+          />
+          {/* <TextComponent
             color="black"
             text="Đang tải dữ liệu..."
             size={17}
-            styles={{textAlign: 'center', marginTop: 10}}
-          />
+            styles={{flex: 0, textAlign: 'center', marginTop: -35}}
+          /> */}
         </View>
       ) : warnings.length === 0 ? (
         <View

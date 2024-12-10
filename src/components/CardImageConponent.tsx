@@ -13,7 +13,7 @@ const CardImageConponent = (props: Props) => {
   return (
     <ImageBackground
       source={require('../assets/images/card-bg.png')}
-      // source={require('../assets/images/logo-iuh.png')}
+      // source={require('../assets/images/loadingMeo-unscreen.gif')}
       imageStyle={{borderRadius: 12}}
       style={[globalStyles.card, styles]}>
       <View

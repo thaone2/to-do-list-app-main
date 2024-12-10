@@ -170,6 +170,7 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
   ScrollView,
   View,
 } from 'react-native';
@@ -255,17 +256,27 @@ const EnergyRealtime: React.FC = () => {
         <View
           style={[
             globalStyles.inputContainer,
-            {marginTop: 20, width: screenWidth - 25},
+            {
+              // marginTop: 20,
+              width: screenWidth - 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
           ]}>
-          <ActivityIndicator size="large" animating={true} color="green" />
+          {/* <ActivityIndicator size="large" animating={true} color="green" /> */}
+          <Image
+            // source={require('../../assets/images/Loading2.gif')}
+            source={require('../../assets/images/botunscreen.gif')}
+            style={{width: 150, height: 150}}
+          />
           <TextComponent
             text="Đang tải dữ liệu..."
-            color="green"
+            color="black"
             size={16}
             styles={[
               {
                 textAlign: 'center',
-                marginTop: 5,
+                marginTop: -15,
                 marginBottom: 5,
                 width: screenWidth - 25,
               },
@@ -357,7 +368,7 @@ const EnergyRealtime: React.FC = () => {
                     styles={{
                       marginRight: 14,
                       borderColor: '#ccc',
-                      borderRightWidth: 1,
+                      // borderRightWidth: 1,
                       paddingRight: 10,
                     }}
                     text={`${date.replace('_', ' ')}`}

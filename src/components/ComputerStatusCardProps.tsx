@@ -34,7 +34,7 @@ const ComputerStatusCardProps = (props: Props) => {
         <TextComponent
           styles={styles.temperatureText}
           color="#F8C266"
-          size={13}
+          size={10}
           text={
             temperature === -127
               ? 'No reading data'

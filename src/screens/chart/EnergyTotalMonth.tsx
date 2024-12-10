@@ -212,6 +212,7 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
   ScrollView,
   StyleSheet,
   View,
@@ -306,7 +307,7 @@ const EnergyTotalMonth = () => {
 
         setTimeout(() => {
           setIsLoading(false); // Kết thúc trạng thái tải sau khi xử lý
-        }, 2000); // Thêm 1 giây để tạo hiệu ứng mượt
+        }, 4000); // Thêm 1 giây để tạo hiệu ứng mượt
       } catch (err) {
         console.error('Error fetching data:', err);
         setIsLoading(false); // Dừng trạng thái tải nếu gặp lỗi
@@ -330,8 +331,16 @@ const EnergyTotalMonth = () => {
           backgroundColor: colors.bgColor,
           padding: 20,
         }}>
-        <View style={[globalStyles.inputContainer, {width: screenWidth - 25}]}>
-          <ActivityIndicator size="large" animating={true} color="blue" />
+        <View
+          style={[
+            globalStyles.inputContainer,
+            {
+              width: screenWidth - 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+          ]}>
+          {/* <ActivityIndicator size="large" animating={true} color="blue" />
           <TextComponent
             text="Đang tải dữ liệu..."
             color="blue"
@@ -340,6 +349,24 @@ const EnergyTotalMonth = () => {
               {
                 textAlign: 'center',
                 marginTop: 5,
+                marginBottom: 5,
+                width: screenWidth - 25,
+              },
+            ]}
+          /> */}
+          <Image
+            // source={require('../../assets/images/Loading2.gif')}
+            source={require('../../assets/images/botunscreen.gif')}
+            style={{width: 150, height: 150}}
+          />
+          <TextComponent
+            text="Đang tải dữ liệu..."
+            color="black"
+            size={16}
+            styles={[
+              {
+                textAlign: 'center',
+                marginTop: -15,
                 marginBottom: 5,
                 width: screenWidth - 25,
               },

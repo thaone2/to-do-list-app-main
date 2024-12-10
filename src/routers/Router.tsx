@@ -112,6 +112,7 @@ const Router = () => {
             },
             headerTitleStyle: {
               fontSize: 20,
+              fontWeight: 'bold',
             },
             tabBarActiveTintColor: 'green',
             title: 'LAB PC MANAGEMENT',
@@ -127,6 +128,7 @@ const Router = () => {
             },
             headerTitleStyle: {
               fontSize: 20,
+              fontWeight: 'bold',
             },
             tabBarActiveTintColor: 'coral',
             title: 'BIỂU ĐỒ LƯỢNG ĐIỆN',
@@ -142,6 +144,7 @@ const Router = () => {
             },
             headerTitleStyle: {
               fontSize: 20,
+              fontWeight: 'bold',
             },
             tabBarActiveTintColor: 'orange',
             title: 'THÔNG BÁO',
@@ -157,6 +160,7 @@ const Router = () => {
             },
             headerTitleStyle: {
               fontSize: 20,
+              fontWeight: 'bold',
             },
             tabBarActiveTintColor: '#2ccce4',
             title: 'MACHINE LEARNING',
@@ -172,6 +176,7 @@ const Router = () => {
             },
             headerTitleStyle: {
               fontSize: 20,
+              fontWeight: 'bold',
             },
             tabBarActiveTintColor: 'black',
             title: 'SETTING',
