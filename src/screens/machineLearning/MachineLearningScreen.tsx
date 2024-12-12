@@ -87,63 +87,82 @@ const MachineLearningScreen = () => {
     }
   };
 
-  const renderGif = () => {
-    switch (gifState) {
-      case 'sleep':
-        return (
-          <Image
-            // source={require('../../assets/images/1.Orbo-ngu-unscreen.gif')}
+  // const renderGif = () => {
+  //   switch (gifState) {
+  //     case 'sleep':
+  //       return (
+  //         <Image
+  //           // source={require('../../assets/images/1.Orbo-ngu-unscreen.gif')}
 
-            source={require('../../assets/images/Orbo-vui-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      case 'skateboard':
-        return (
-          <Image
-            source={require('../../assets/images/2.Orbo-tr-t-van-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      case 'error':
-        return (
-          <Image
-            // source={require('../../assets/images/3.error-404-unscreen.gif')}
-            source={require('../../assets/images/404-error-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      case 'learning':
-        return (
-          <Image
-            source={require('../../assets/images/4.robot-quay-dau-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      case 'thinking':
-        return (
-          <Image
-            source={require('../../assets/images/5.Orbo-suynghi-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      case 'ok':
-        return (
-          <Image
-            source={require('../../assets/images/Orbo-ok-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      case 'crying':
-        return (
-          <Image
-            source={require('../../assets/images/Crying-Orbo-unscreen.gif')}
-            style={styles.gif}
-          />
-        );
-      default:
-        return null;
-    }
+  //           source={require('../../assets/images/Orbo-vui-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     case 'skateboard':
+  //       return (
+  //         <Image
+  //           source={require('../../assets/images/2.Orbo-tr-t-van-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     case 'error':
+  //       return (
+  //         <Image
+  //           // source={require('../../assets/images/3.error-404-unscreen.gif')}
+  //           source={require('../../assets/images/404-error-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     case 'learning':
+  //       return (
+  //         <Image
+  //           source={require('../../assets/images/4.robot-quay-dau-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     case 'thinking':
+  //       return (
+  //         <Image
+  //           source={require('../../assets/images/5.Orbo-suynghi-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     case 'ok':
+  //       return (
+  //         <Image
+  //           source={require('../../assets/images/Orbo-ok-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     case 'crying':
+  //       return (
+  //         <Image
+  //           source={require('../../assets/images/Crying-Orbo-unscreen.gif')}
+  //           style={styles.gif}
+  //         />
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
+
+  const renderGif = () => {
+    const gifMapping: Record<string, any> = {
+      sleep: require('../../assets/images/Orbo-vui-unscreen.gif'),
+      skateboard: require('../../assets/images/2.Orbo-tr-t-van-unscreen.gif'),
+      error: require('../../assets/images/404-error-unscreen.gif'),
+      learning: require('../../assets/images/4.robot-quay-dau-unscreen.gif'),
+      thinking: require('../../assets/images/5.Orbo-suynghi-unscreen.gif'),
+      ok: require('../../assets/images/Orbo-ok-unscreen.gif'),
+      crying: require('../../assets/images/Crying-Orbo-unscreen.gif'),
+    };
+
+    // Kiểm tra nếu gifState không có trong gifMapping, trả về hình ảnh mặc định
+    const gifSource =
+      gifMapping[gifState] ||
+      require('../../assets/images/Orbo-vui-unscreen.gif');
+
+    return <Image source={gifSource} style={styles.gif} />;
   };
 
   const renderTable = () => {
@@ -155,13 +174,11 @@ const MachineLearningScreen = () => {
           key={index}
           style={{
             marginTop: 10,
-            // backgroundColor: '#a2d5c6',
             marginHorizontal: -20,
             borderRadius: 12,
           }}>
           <View
             style={{
-              // backgroundColor: '#077b8a',
               paddingVertical: 8,
               borderRadius: 12,
             }}>
@@ -173,7 +190,6 @@ const MachineLearningScreen = () => {
               style={[
                 styles.machineRow,
                 {
-                  // backgroundColor: '#5c3c92',
                   alignItems: 'center',
                 },
               ]}>
@@ -398,271 +414,3 @@ const styles = StyleSheet.create({
 });
 
 export default MachineLearningScreen;
-
-// import axios from 'axios';
-// import React, {useState} from 'react';
-// import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-
-// import Container from '../../components/Container';
-// import TextComponent from '../../components/TextComponent';
-// import {colors} from '../../constants/colors';
-// import {globalStyles} from '../../styles/globalStyles';
-
-// const MachineLearningScreen = () => {
-//   const [gifState, setGifState] = useState('sleep');
-//   const [connectionStatus, setConnectionStatus] = useState('Chưa kiểm tra');
-//   const [predictionResult, setPredictionResult] = useState<any>({});
-
-//   const handleCheckConnection = async () => {
-//     setGifState('loading');
-//     try {
-//       const response = await axios.get('http://192.168.1.7:5000/ping');
-//       if (response.status === 200) {
-//         setConnectionStatus('Kết nối thành công');
-//         setGifState('skateboard');
-//       } else {
-//         setConnectionStatus('Không thể kết nối với server');
-//         setGifState('error');
-//       }
-//     } catch (error) {
-//       setConnectionStatus('Không thể kết nối với server');
-//       setGifState('error');
-//     }
-//   };
-
-//   const handleStartTrain = async () => {
-//     setGifState('learning');
-//     try {
-//       const response = await fetch('http://192.168.1.7:5000/train', {
-//         method: 'GET',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       });
-//       const result = await response.json();
-//       setPredictionResult(result);
-
-//       if (response.ok) {
-//         setConnectionStatus('Dự đoán thành công');
-//         setGifState('thinking');
-//       }
-//     } catch (error) {
-//       setGifState('crying');
-//       setConnectionStatus('Dự đoán không thành công');
-//     }
-//   };
-
-//   const handlePrepareData = async () => {
-//     setGifState('ok');
-//     try {
-//       const response = await fetch('http://192.168.1.7:5000/prepare_data', {
-//         method: 'GET',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       });
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         setConnectionStatus('Chuẩn bị dữ liệu thành công');
-//         setGifState('ok');
-//       } else {
-//         setConnectionStatus('Chuẩn bị dữ liệu không thành công');
-//         setGifState('crying');
-//       }
-//     } catch (error) {
-//       setConnectionStatus('Chuẩn bị dữ liệu không thành công');
-//       setGifState('crying');
-//     }
-//   };
-
-//   const renderGif = () => {
-//     const gifMapping: {[key: string]: any} = {
-//       sleep: require('../../assets/images/Orbo-vui-unscreen.gif'),
-//       skateboard: require('../../assets/images/2.Orbo-tr-t-van-unscreen.gif'),
-//       error: require('../../assets/images/404-error-unscreen.gif'),
-//       learning: require('../../assets/images/4.robot-quay-dau-unscreen.gif'),
-//       thinking: require('../../assets/images/5.Orbo-suynghi-unscreen.gif'),
-//       ok: require('../../assets/images/Orbo-ok-unscreen.gif'),
-//       crying: require('../../assets/images/Crying-Orbo-unscreen.gif'),
-//     };
-//     return <Image source={gifMapping[gifState]} style={styles.gif} />;
-//   };
-
-//   const renderTable = () => {
-//     return Object.keys(predictionResult).map((date, index) => {
-//       const machines = predictionResult[date];
-//       return (
-//         <View key={index} style={styles.tableContainer}>
-//           <View style={styles.dateGroup}>
-//             <Text style={styles.dateText}>{date}</Text>
-//           </View>
-
-//           <View style={styles.machineRowContainer}>
-//             {Object.keys(machines).map((computer, compIndex) => {
-//               const {usage_level, predicted_time_hours} = machines[computer];
-//               return (
-//                 <View key={compIndex} style={styles.machineRow}>
-//                   <Text style={styles.machineCell}>{computer}</Text>
-//                   <Text style={styles.machineCell}>
-//                     ~ {predicted_time_hours} giờ
-//                   </Text>
-//                   <Text style={styles.machineCell}>{usage_level}</Text>
-//                 </View>
-//               );
-//             })}
-//           </View>
-//         </View>
-//       );
-//     });
-//   };
-
-//   return (
-//     <View style={{flex: 1, backgroundColor: colors.bgColor}}>
-//       <Container isScroll>
-//         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-//           <View style={styles.gifContainer}>{renderGif()}</View>
-//         </View>
-//         <TextComponent
-//           text={`Trạng thái: ${connectionStatus}`}
-//           styles={{
-//             color:
-//               connectionStatus === 'Kết nối thành công' ||
-//               connectionStatus === 'Chuẩn bị dữ liệu thành công' ||
-//               connectionStatus === 'Dự đoán thành công'
-//                 ? 'green'
-//                 : 'red',
-//             marginHorizontal: 14,
-//             textAlign: 'center',
-//             padding: 10,
-//           }}
-//           size={16}
-//         />
-
-//         <TouchableOpacity style={styles.button} onPress={handleCheckConnection}>
-//           <TextComponent
-//             text="Kiểm tra kết nối server"
-//             styles={[globalStyles.inputContainer, styles.buttonText]}
-//             color="black"
-//             size={16}
-//           />
-//         </TouchableOpacity>
-
-//         <TouchableOpacity
-//           style={[
-//             styles.button,
-//             {
-//               opacity: connectionStatus === 'Kết nối thành công' ? 1 : 0.3,
-//             },
-//           ]}
-//           onPress={handlePrepareData}
-//           disabled={connectionStatus !== 'Kết nối thành công'}>
-//           <TextComponent
-//             text="Chuẩn bị dữ liệu"
-//             styles={[globalStyles.inputContainer, styles.buttonText]}
-//             color="white"
-//             size={16}
-//           />
-//         </TouchableOpacity>
-
-//         <TouchableOpacity
-//           style={[
-//             styles.button,
-//             {
-//               opacity:
-//                 connectionStatus === 'Chuẩn bị dữ liệu thành công' ? 1 : 0.3,
-//             },
-//           ]}
-//           onPress={handleStartTrain}
-//           disabled={connectionStatus !== 'Chuẩn bị dữ liệu thành công'}>
-//           <TextComponent
-//             text="Bắt đầu dự đoán"
-//             styles={[globalStyles.inputContainer, styles.buttonText]}
-//             color="white"
-//             size={16}
-//           />
-//         </TouchableOpacity>
-
-//         {connectionStatus === 'Dự đoán thành công' &&
-//           predictionResult &&
-//           Object.keys(predictionResult).length > 0 && (
-//             <View style={styles.resultContainer}>
-//               <Text style={styles.resultHeader}>
-//                 Kết quả dự đoán thời gian sử dụng cho 7 ngày tới:
-//               </Text>
-//               {renderTable()}
-//             </View>
-//           )}
-//       </Container>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   gif: {
-//     width: 130,
-//     height: 130,
-//   },
-//   gifContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     height: 130,
-//     width: 130,
-//   },
-//   tableContainer: {
-//     marginTop: 10,
-//     marginHorizontal: -20,
-//     borderRadius: 12,
-//   },
-//   dateGroup: {
-//     paddingVertical: 8,
-//     borderRadius: 12,
-//     backgroundColor: '#077b8a',
-//   },
-//   dateText: {
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     fontSize: 18,
-//     color: 'black',
-//   },
-//   machineRowContainer: {
-//     backgroundColor: '#26495c',
-//   },
-//   machineRow: {
-//     flexDirection: 'row',
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#ddd',
-//     paddingVertical: 10,
-//     paddingHorizontal: 5,
-//   },
-//   machineCell: {
-//     textAlign: 'center',
-//     fontSize: 14,
-//     color: 'white',
-//   },
-//   button: {
-//     marginTop: 10,
-//     marginBottom: 10,
-//   },
-//   buttonText: {
-//     flex: 0,
-//     marginHorizontal: 14,
-//     textAlign: 'center',
-//     backgroundColor: '#BFC8BD',
-//   },
-//   resultContainer: {
-//     marginTop: 20,
-//     marginHorizontal: 40,
-//     marginBottom: 20,
-//   },
-//   resultHeader: {
-//     textAlign: 'center',
-//     fontWeight: 'bold',
-//     color: 'green',
-//     fontSize: 17,
-//     textTransform: 'uppercase',
-//   },
-// });
-
-// export default MachineLearningScreen;
