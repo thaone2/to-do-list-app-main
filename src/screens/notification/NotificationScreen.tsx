@@ -172,7 +172,9 @@ const NotificationScreen: React.FC = () => {
           {/* <ActivityIndicator color="black" size="large" /> */}
           <Image
             // source={require('../../assets/images/Loading2.gif')}
-            source={require('../../assets/images/botunscreen.gif')}
+
+            // source={require('../../assets/images/botunscreen.gif')}
+            source={require('../../assets/images/Chuong-unscreen.gif')}
             style={{width: 200, height: 200}}
           />
           {/* <TextComponent

@@ -801,7 +801,8 @@ const PrepareData = () => {
 
       {predictionResult && Object.keys(predictionResult).length > 0 && (
         <View style={{marginTop: 20}}>
-          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+          <Text
+            style={{textAlign: 'center', fontWeight: 'bold', color: 'black'}}>
             Dự đoán 7 ngày tương lai:
           </Text>
           {Object.keys(predictionResult).map(date => (
