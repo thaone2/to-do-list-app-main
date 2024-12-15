@@ -16,6 +16,8 @@ const MachineLearningScreen = () => {
     setGifState('loading');
     try {
       const response = await axios.get('http://192.168.1.7:5000/ping');
+      // const response = await axios.get('192.168.1.7:8000/ping');
+
       if (response.status === 200) {
         setConnectionStatus('Kết nối thành công');
         setGifState('skateboard');
@@ -33,6 +35,7 @@ const MachineLearningScreen = () => {
     setGifState('learning');
     try {
       const response = await fetch('http://192.168.1.7:5000/train', {
+        // const response = await fetch('http://192.168.1.7:8000/train', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -60,6 +63,7 @@ const MachineLearningScreen = () => {
 
     try {
       const response = await fetch('http://192.168.1.7:5000/prepare_data', {
+        // const response = await fetch('http://192.168.1.7:8000/prepare_data', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
