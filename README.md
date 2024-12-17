@@ -1,4 +1,5 @@
-# LAB PC MANAGEMENT is a mobile application developed using React Native, designed to manage and monitor the operational time of computers in a LAB environment. The application allows users to view usage time data for each computer on a daily basis, making the management process more efficient and convenient.
+# LAB PC MANAGEMENT 
+## LAB PC MANAGEMENT is a mobile application developed using React Native, designed to manage and monitor the operational time of computers in a LAB environment. The application allows users to view usage time data for each computer on a daily basis, making the management process more efficient and convenient.
 
 ## The project was carried out as part of the graduation thesis by student Huynh Minh Thao.
 
