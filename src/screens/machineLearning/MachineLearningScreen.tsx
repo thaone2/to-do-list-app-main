@@ -87,7 +87,6 @@ const MachineLearningScreen = () => {
       // console.error('Error:', error);
       setConnectionStatus('Chuẩn bị dữ liệu không thành công');
       setGifState('crying');
-      // Xử lý lỗi kết nối (network error)
     }
   };
 
@@ -262,7 +261,6 @@ const MachineLearningScreen = () => {
                 : connectionStatus === 'Dự đoán thành công'
                 ? 'green'
                 : 'red',
-            // color: 'black',
             flex: 0,
             marginHorizontal: 14,
             textAlign: 'center',
@@ -292,7 +290,6 @@ const MachineLearningScreen = () => {
 
         <TouchableOpacity
           style={{
-            // marginTop: 10,
             opacity:
               connectionStatus === 'Kết nối thành công'
                 ? 1
@@ -381,7 +378,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
-    // overflow: 'hidden',
     paddingHorizontal: 10,
     marginVertical: 10,
     flex: 0,
@@ -391,8 +387,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     paddingVertical: 10,
   },
-  dateGroup: {},
-  dateRow: {},
   dateText: {
     fontWeight: 'bold',
     textAlign: 'center',

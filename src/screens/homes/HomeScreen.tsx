@@ -17,7 +17,6 @@ import {globalStyles} from '../../styles/globalStyles';
 import BlinkingIndicator from './BlinkingIndicator';
 import ComputerUsageTime from './ComputerUsageTime';
 import Pzem004TSensor from './Pzem004TSensor';
-import {colors} from '../../constants/colors';
 
 const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   const screenWidth = Dimensions.get('window').width;
@@ -54,7 +53,6 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
       hlkRadarValueRef.current = status;
       setHlkRadarValue(prev => !prev); // Trigger một lần re-render khi giá trị thay đổi
     });
-    //cleanup function
     return () => {
       databaseHLKRef.off('value', listener);
     };

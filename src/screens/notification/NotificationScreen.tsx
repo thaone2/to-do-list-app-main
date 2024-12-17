@@ -172,17 +172,10 @@ const NotificationScreen: React.FC = () => {
           {/* <ActivityIndicator color="black" size="large" /> */}
           <Image
             // source={require('../../assets/images/Loading2.gif')}
-
             // source={require('../../assets/images/botunscreen.gif')}
             source={require('../../assets/images/Chuong-unscreen.gif')}
             style={{width: 200, height: 200}}
           />
-          {/* <TextComponent
-            color="black"
-            text="Đang tải dữ liệu..."
-            size={17}
-            styles={{flex: 0, textAlign: 'center', marginTop: -35}}
-          /> */}
         </View>
       ) : warnings.length === 0 ? (
         <View
