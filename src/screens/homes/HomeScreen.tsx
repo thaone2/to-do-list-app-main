@@ -53,6 +53,7 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
       hlkRadarValueRef.current = status;
       setHlkRadarValue(prev => !prev); // Trigger một lần re-render khi giá trị thay đổi
     });
+
     return () => {
       databaseHLKRef.off('value', listener);
     };

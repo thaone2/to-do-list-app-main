@@ -101,9 +101,9 @@ const LoginScreen = ({navigation}: any) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setErrorText('Vui lòng nhập email và password !!!');
+      setErrorText('Vui lòng nhập email và mật khẩu !!!');
       // Hiển thị thông báo lỗi dạng Alert
-      Alert.alert('Lỗi', 'Vui lòng nhập email và password !!!', [
+      Alert.alert('Lỗi', 'Vui lòng nhập email và mật khẩu !!!', [
         {text: 'OK', style: 'cancel'},
       ]);
     } else {
@@ -115,7 +115,7 @@ const LoginScreen = ({navigation}: any) => {
           const user = userCredential.user;
 
           if (user) {
-            console.log(user);
+            // console.log(user);
             setIsLoading(false);
           }
         })
@@ -139,7 +139,7 @@ const LoginScreen = ({navigation}: any) => {
           justifyContent: 'center',
         }}>
         <RowComponent styles={{marginBottom: 16}}>
-          <TitleComponent color="coral" text="LOGIN" size={36} flex={0} />
+          <TitleComponent color="coral" text="ĐĂNG NHẬP" size={36} flex={0} />
         </RowComponent>
 
         <InputComponent
@@ -158,25 +158,28 @@ const LoginScreen = ({navigation}: any) => {
           isPassword
           value={password}
           onChange={val => setPassword(val)}
-          placeholder="Password"
+          placeholder="Mật khẩu"
           prefix={<Lock size={22} color="coral" />}
         />
 
         <ButtonComponent
           isLoading={isLoading}
-          text="Login"
+          text="Đăng nhập"
           onPress={handleLogin}
           color="coral"
+          styles={{marginTop: 8}}
         />
 
         <RowComponent styles={{marginTop: 20}}>
           <Text style={[globalStyles.text, {color: colors.gray2}]}>
-            You don't have an account?
-            <Text
-              style={{color: 'coral'}}
-              onPress={() => navigation.navigate('RegisterScreen')}>
-              Create an account
-            </Text>
+            {/* You don't have an account? */}
+            Bạn chưa có tài khoản?
+          </Text>
+          <Text
+            style={{color: 'coral', paddingLeft: 2}}
+            onPress={() => navigation.navigate('RegisterScreen')}>
+            {/* Create an account */}
+            Tạo tài khoản
           </Text>
         </RowComponent>
       </SectionComponent>

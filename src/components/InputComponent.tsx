@@ -49,6 +49,7 @@ const InputComponent = (props: Props) => {
 
   return (
     <View style={[styles, {marginBottom: 16}]}>
+      {/* set flex={0} để hiển thị title */}
       {title && <TitleComponent text={title} color="black" />}
       <RowComponent
         styles={[

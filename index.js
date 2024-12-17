@@ -9,9 +9,9 @@ import App from './App';
 import {name as appName} from './app.json';
 
 // Handle background messages using setBackgroundMessageHandler
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-});
+// messaging().setBackgroundMessageHandler(async remoteMessage => {
+//   console.log('Message handled in the background!', remoteMessage);
+// });
 
 // Check if app was launched in the background and conditionally render null if so
 function HeadlessCheck({isHeadless}) {
