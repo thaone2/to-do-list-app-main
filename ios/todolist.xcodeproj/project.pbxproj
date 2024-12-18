@@ -20,6 +20,9 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A7878F95211E4B6D98DEC526 /* NunitoSans_10pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE602D8ECE924A0E9EBFEDED /* NunitoSans_10pt-SemiBold.ttf */; };
 		B64CFF0E95F94F498EC7F521 /* NunitoSans_10pt-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 873038C343F84754B3B8D12A /* NunitoSans_10pt-Light.ttf */; };
+		66D1BBADE81144689A909456 /* PlaywriteGBS-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9942F7AB3CC6433E8F2919DF /* PlaywriteGBS-Italic-VariableFont_wght.ttf */; };
+		8862A3F9FF1F448199FB9C2F /* PlaywriteGBS-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7195BF5BB5224BE9AA13D806 /* PlaywriteGBS-VariableFont_wght.ttf */; };
+		1D0A62AC2BF84B17AD69744A /* Oswald-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5FA1D84825324E04A3428F9F /* Oswald-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +59,9 @@
 		DDA678C2C18F4249A7D267B0 /* NunitoSans_10pt-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NunitoSans_10pt-Bold.ttf"; path = "../assets/fonts/NunitoSans_10pt-Bold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EE602D8ECE924A0E9EBFEDED /* NunitoSans_10pt-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NunitoSans_10pt-SemiBold.ttf"; path = "../assets/fonts/NunitoSans_10pt-SemiBold.ttf"; sourceTree = "<group>"; };
+		9942F7AB3CC6433E8F2919DF /* PlaywriteGBS-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "PlaywriteGBS-Italic-VariableFont_wght.ttf"; path = "../assets/fonts/PlaywriteGBS-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7195BF5BB5224BE9AA13D806 /* PlaywriteGBS-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "PlaywriteGBS-VariableFont_wght.ttf"; path = "../assets/fonts/PlaywriteGBS-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5FA1D84825324E04A3428F9F /* Oswald-Regular.ttf */ = {isa = PBXFileReference; name = "Oswald-Regular.ttf"; path = "../assets/fonts/Oswald-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +132,9 @@
 				59267EF744934702B2F051F8 /* NunitoSans_10pt-Medium.ttf */,
 				2A2761A5AE0E46C4800287D3 /* NunitoSans_10pt-Regular.ttf */,
 				EE602D8ECE924A0E9EBFEDED /* NunitoSans_10pt-SemiBold.ttf */,
+				9942F7AB3CC6433E8F2919DF /* PlaywriteGBS-Italic-VariableFont_wght.ttf */,
+				7195BF5BB5224BE9AA13D806 /* PlaywriteGBS-VariableFont_wght.ttf */,
+				5FA1D84825324E04A3428F9F /* Oswald-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -275,6 +284,9 @@
 				7139A0172AED41D08929C1FE /* NunitoSans_10pt-Medium.ttf in Resources */,
 				4125BBAFAC224B9586A903B5 /* NunitoSans_10pt-Regular.ttf in Resources */,
 				A7878F95211E4B6D98DEC526 /* NunitoSans_10pt-SemiBold.ttf in Resources */,
+				66D1BBADE81144689A909456 /* PlaywriteGBS-Italic-VariableFont_wght.ttf in Resources */,
+				8862A3F9FF1F448199FB9C2F /* PlaywriteGBS-VariableFont_wght.ttf in Resources */,
+				1D0A62AC2BF84B17AD69744A /* Oswald-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

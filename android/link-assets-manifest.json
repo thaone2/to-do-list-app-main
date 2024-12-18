@@ -90,6 +90,18 @@
       "sha1": "56acefc0731f35ee23b195b1c8cb5fa94a0db97b"
     },
     {
+      "path": "assets/fonts/Oswald-Regular.ttf",
+      "sha1": "06aae8f5a28908ba8eca0d5bdc01cedc2a184a5f"
+    },
+    {
+      "path": "assets/fonts/PlaywriteGBS-Italic-VariableFont_wght.ttf",
+      "sha1": "a2c2c0bdd97a22207c27b6d1d123c33f5ff55213"
+    },
+    {
+      "path": "assets/fonts/PlaywriteGBS-VariableFont_wght.ttf",
+      "sha1": "c611e5b88ee3b26893117013d0889ac7e294f0ef"
+    },
+    {
       "path": "assets/fonts/SimpleLineIcons.ttf",
       "sha1": "9ffb81a5a11112e292f2cc323e98486bad597599"
     },

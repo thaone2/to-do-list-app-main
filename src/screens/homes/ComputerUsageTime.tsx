@@ -8,6 +8,7 @@ import SectionComponent from '../../components/SectionComponent';
 import TextComponent from '../../components/TextComponent';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyles} from '../../styles/globalStyles';
+import {colors} from '../../constants/colors';
 
 interface ComputerTime {
   computer1: string;
@@ -95,7 +96,8 @@ const ComputerUsageTime: React.FC = () => {
         style={[
           globalStyles.inputContainer,
           {
-            backgroundColor: '#B0C4DE',
+            // backgroundColor: '#B0C4DE',
+            backgroundColor: 'rgba(43,176,237, 0.1)',
             padding: 10,
           },
         ]}>
@@ -110,7 +112,11 @@ const ComputerUsageTime: React.FC = () => {
             text={`Thời gian hoạt động`}
             color="black"
             size={17}
-            styles={{fontWeight: 'bold', textTransform: 'uppercase'}}
+            styles={{
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              fontFamily: fontFamilies.TextTitle,
+            }}
           />
         </View>
         {/* Nút chọn ngày */}

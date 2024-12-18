@@ -31,6 +31,7 @@
     "react-native-circular-progress-indicator": "^4.4.2",
     "react-native-date-picker": "^4.3.4",
     "react-native-drop-shadow": "^1.0.0",
+    "react-native-image-crop-picker": "^0.41.6",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-orientation-locker": "^1.7.0",
     "react-native-ping": "^1.2.8",

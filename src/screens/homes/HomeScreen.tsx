@@ -17,6 +17,7 @@ import {globalStyles} from '../../styles/globalStyles';
 import BlinkingIndicator from './BlinkingIndicator';
 import ComputerUsageTime from './ComputerUsageTime';
 import Pzem004TSensor from './Pzem004TSensor';
+import {fontFamilies} from '../../constants/fontFamilies';
 
 const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
   const screenWidth = Dimensions.get('window').width;
@@ -219,6 +220,7 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
                   styles={{
                     textTransform: 'capitalize',
                     fontWeight: 'bold',
+                    fontFamily: fontFamilies.Hello,
                   }}
                 />
               </View>
@@ -239,7 +241,10 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
                   font="semiBold"
                   size={14}
                   text={time}
-                  styles={{fontWeight: 'bold'}}
+                  styles={{
+                    fontWeight: 'bold',
+                    fontFamily: fontFamilies.HelloItalic,
+                  }}
                 />
               </View>
             </CardImageConponent>
@@ -277,6 +282,7 @@ const HomeScreen = ({navigation}: any, {isActive}: {isActive: boolean}) => {
                   color: 'black',
                   fontWeight: 'bold',
                   paddingTop: 6,
+                  // textTransform: 'uppercase',
                 }}
                 text="HLK Radar Sensor"
                 size={18}

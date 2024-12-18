@@ -1,13 +1,19 @@
-# LAB PC MANAGEMENT 
+# LAB PC MANAGEMENT
+
 ## LAB PC MANAGEMENT is a mobile application developed using React Native, designed to manage and monitor the operational time of computers in a LAB environment. The application allows users to view usage time data for each computer on a daily basis, making the management process more efficient and convenient.
 
 ## The project was carried out as part of the graduation thesis by student Huynh Minh Thao.
 
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## Build file APK
+
+cd android
+./gradlew assembleRelease
+
+## Add font
+
+npx react-native-asset
 
 # Getting Started
-
-> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Step 1: Start the Metro Server
 
